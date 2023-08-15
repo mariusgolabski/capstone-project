@@ -8,14 +8,9 @@ export const StyledCard = styled.article`
 `;
 
 export const StyledCategory = styled.span`
-  background-color: #8f8f8f;
-  display: inline-flex;
-  align-items: center;
-  height: 1.5rem;
-  color: #fff;
+  color: #666;
   font-size: 0.8rem;
   text-transform: uppercase;
-  padding: 0 0.625rem;
   border-radius: 1rem;
 `;
 
@@ -28,10 +23,11 @@ export const StyledHeader = styled.div`
 
 export const StyledQuestion = styled.h2`
   margin-top: 0.8rem;
+  color: #171717;
 `;
 
 export const StyledAnswer = styled.p`
   line-height: 1.2;
-  color: #666;
+  color: #171717;
   padding: 1rem 2rem 2rem 2rem;
 `;
