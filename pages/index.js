@@ -1,5 +1,5 @@
-import Link from "next/link";
+import InterviewSection from "@/components/InterviewSection";
 
 export default function HomePage() {
-  return <Link href="/home">Home</Link>;
+  return <InterviewSection />;
 }
