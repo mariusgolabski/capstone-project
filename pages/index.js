@@ -6,7 +6,7 @@ import Modal from "@/components/Modal";
 
 export default function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
-  const [step, setStep] = useState(1); // 1 is default value
+  const [step, setStep] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedQuestion, setSelectedQuestion] = useState("");
   const [interviewAnswer, setInterviewAnswer] = useState("");
@@ -22,7 +22,7 @@ export default function HomePage() {
   }
 
   function handlePreviousStep() {
-    setStep((prevStep) => prevStep - 1); // callbackfunction // saver
+    setStep((prevStep) => prevStep - 1);
   }
 
   function handleNextStep() {
@@ -31,7 +31,7 @@ export default function HomePage() {
 
   function handleCategoryChange(categoryName) {
     setSelectedCategory(categoryName);
-    setSelectedQuestion(""); // Reset selected question when category changes
+    setSelectedQuestion("");
   }
 
   function handleQuestionChange(question) {
