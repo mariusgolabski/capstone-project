@@ -1,6 +1,9 @@
 import { Fragment, useState } from "react";
-import { interviews } from "../../lib/interviewQuestionsData";
-import { StyledSection } from "./InterviewSection.styled";
+import {
+  StyledSection,
+  StyledOpenModalButton,
+  AddInterviewSvg,
+} from "./InterviewSection.styled";
 import InterviewFilter from "../InterviewFilter";
 import FilterButton from "../FilterButton";
 import Interview from "../Interview/index";
@@ -14,7 +17,7 @@ const interviewCategories = [
   "Leadership",
 ];
 
-export default function InterviewSection() {
+export default function InterviewSection({ interviews, toggleModal }) {
   const [selectedCategory, setSelectedCategory] = useState(
     interviewCategories[0]
   );
@@ -33,6 +36,9 @@ export default function InterviewSection() {
 
   return (
     <StyledSection>
+      <StyledOpenModalButton onClick={toggleModal}>
+        <AddInterviewSvg />
+      </StyledOpenModalButton>
       <InterviewFilter>
         {interviewCategories.map((category) => (
           <FilterButton
@@ -43,7 +49,6 @@ export default function InterviewSection() {
           />
         ))}
       </InterviewFilter>
-
       {filteredInterviews.map((interview) => {
         return (
           <Fragment key={interview.id}>
