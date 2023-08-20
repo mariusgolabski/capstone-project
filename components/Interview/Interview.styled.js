@@ -27,6 +27,7 @@ export const StyledQuestion = styled.h2`
 `;
 
 export const StyledAnswer = styled.p`
+  word-wrap: break-word;
   line-height: 1.2;
   color: #171717;
   padding: 1rem 2rem 2rem 2rem;
