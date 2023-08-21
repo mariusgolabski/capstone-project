@@ -1,4 +1,4 @@
-export const interviews = [
+export const interviewsData = [
   {
     id: 1,
     interviewQuestionCategory: "About",
