@@ -5,7 +5,7 @@ export const categoriesQuestionsData = [
     questions: [
       {
         id: "1",
-        name: "Where are you most likely going to be spotted on the weekend? ",
+        name: "Where are you most likely going to be spotted on the weekend?",
       },
       {
         id: "2",
@@ -26,6 +26,10 @@ export const categoriesQuestionsData = [
       {
         id: "6",
         name: "What is your favorite song, book or movie?",
+      },
+      {
+        id: "7",
+        name: "What do you like to do to unwind after work?",
       },
     ],
   },
