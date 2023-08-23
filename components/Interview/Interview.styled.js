@@ -30,5 +30,25 @@ export const StyledAnswer = styled.p`
   word-wrap: break-word;
   line-height: 1.2;
   color: #171717;
-  padding: 1rem 2rem 2rem 2rem;
+  padding: 1rem 2rem;
+`;
+
+export const StyledFooter = styled.div`
+  display: flex;
+  border-top: 1px solid #eaeaea;
+  padding: 1rem 2rem;
+  justify-content: flex-start;
+  gap: 0.5rem;
+`;
+
+export const StyledButton = styled.button`
+  padding: 0.4rem 1.2rem;
+  color: #171717;
+  cursor: pointer;
+  border: 1px solid #e5e5e5;
+  border-radius: 0.375rem;
+  background-color: #fff;
+  &:hover {
+    background-color: #f2f2f2;
+  }
 `;
