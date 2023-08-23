@@ -4,9 +4,18 @@ import {
   StyledHeader,
   StyledQuestion,
   StyledAnswer,
+  StyledFooter,
+  StyledButton,
 } from "./Interview.styled";
 
-export default function Interview({ category, question, answer }) {
+export default function Interview({
+  interview,
+  category,
+  question,
+  answer,
+  onEdit,
+  onDelete,
+}) {
   return (
     <StyledCard>
       <StyledHeader>
@@ -14,6 +23,10 @@ export default function Interview({ category, question, answer }) {
         <StyledQuestion>{question}</StyledQuestion>
       </StyledHeader>
       <StyledAnswer>{answer}</StyledAnswer>
+      <StyledFooter>
+        <StyledButton onClick={() => onEdit(interview)}>Edit</StyledButton>
+        <StyledButton onClick={() => onDelete(interview)}>Delete</StyledButton>
+      </StyledFooter>
     </StyledCard>
   );
 }
