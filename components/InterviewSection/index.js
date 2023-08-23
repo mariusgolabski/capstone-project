@@ -17,7 +17,12 @@ const interviewCategories = [
   "Leadership",
 ];
 
-export default function InterviewSection({ interviews, toggleModal }) {
+export default function InterviewSection({
+  interviews,
+  openModal,
+  onEdit,
+  onDelete,
+}) {
   const [selectedCategory, setSelectedCategory] = useState(
     interviewCategories[0]
   );
@@ -36,7 +41,7 @@ export default function InterviewSection({ interviews, toggleModal }) {
 
   return (
     <StyledSection>
-      <StyledOpenModalButton onClick={toggleModal}>
+      <StyledOpenModalButton onClick={openModal}>
         <AddInterviewSvg />
       </StyledOpenModalButton>
       <InterviewFilter>
@@ -53,9 +58,14 @@ export default function InterviewSection({ interviews, toggleModal }) {
         return (
           <Fragment key={interview.id}>
             <Interview
+              key={interview.id}
+              interview={interview}
               category={interview.interviewQuestionCategory}
               question={interview.question}
               answer={interview.answer}
+              openModal={openModal}
+              onEdit={() => onEdit(interview)}
+              onDelete={onDelete}
             />
           </Fragment>
         );
