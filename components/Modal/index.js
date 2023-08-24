@@ -16,6 +16,7 @@ import {
 
 export default function Modal({
   isOpen,
+  isEditMode,
   handleSubmit,
   step,
   selectedCategory,
@@ -26,7 +27,7 @@ export default function Modal({
   handleCategoryChange,
   handleInterviewAnswerChange,
   interviewAnswer,
-  toggleModal,
+  closeModal,
 }) {
   return (
     <>
@@ -37,7 +38,7 @@ export default function Modal({
               {step === 1 && <h2>Setting the Interview Focus</h2>}
               {step === 2 && <h2>Unveil Your Story</h2>}
               {step === 3 && <h2>Let’s Hear Your Insights</h2>}
-              <CloseModalButton onClick={toggleModal}>
+              <CloseModalButton onClick={closeModal}>
                 <CloseModalSvg />
               </CloseModalButton>
             </StyledHeader>
@@ -146,7 +147,9 @@ export default function Modal({
                     <StyledButton onClick={handlePreviousStep}>
                       Back
                     </StyledButton>
-                    <StyledButton type="submit">Save</StyledButton>
+                    <StyledButton type="submit">
+                      {isEditMode ? "Save" : "Post"}
+                    </StyledButton>
                   </>
                 )}
               </StyledFooter>

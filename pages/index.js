@@ -3,22 +3,39 @@ import { interviewsData as initialInterviews } from "../db/interviewQuestionsDat
 import { uid } from "uid";
 import InterviewSection from "@/components/InterviewSection";
 import Modal from "@/components/Modal";
+import DeleteConfirmationModal from "@/components/DeleteConfirmationModal";
 
 export default function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [step, setStep] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedQuestion, setSelectedQuestion] = useState("");
   const [interviewAnswer, setInterviewAnswer] = useState("");
-  // TODO
   const [interviews, setInterviews] = useState(initialInterviews);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedInterview, setSelectedInterview] = useState("");
 
   useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "unset";
-  }, [isOpen]);
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow =
+      isOpen || isDeleteModalOpen ? "hidden" : "unset";
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isOpen, isDeleteModalOpen]);
 
-  function toggleModal() {
-    setIsOpen(!isOpen);
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+    setSelectedCategory("");
+    setSelectedQuestion("");
+    setInterviewAnswer("");
+    setStep(1);
+    setIsEditMode(false);
   }
 
   function handlePreviousStep() {
@@ -32,41 +49,98 @@ export default function HomePage() {
   function handleCategoryChange(categoryName) {
     setSelectedCategory(categoryName);
     setSelectedQuestion("");
+    setInterviewAnswer("");
   }
 
   function handleQuestionChange(question) {
     setSelectedQuestion(question);
+    setInterviewAnswer("");
   }
 
-  const handleInterviewAnswerChange = (event) => {
+  function handleInterviewAnswerChange(event) {
     setInterviewAnswer(event.target.value);
-  };
+  }
 
-  const handleSubmit = (event) => {
+  function handleSubmit(event) {
     event.preventDefault();
 
-    const newInterviewEntry = {
-      id: uid(),
-      interviewQuestionCategory: selectedCategory,
-      question: selectedQuestion,
-      answer: interviewAnswer,
-    };
+    if (isEditMode && selectedInterview) {
+      const updatedInterviews = interviews.map((interview) =>
+        interview.id === selectedInterview.id
+          ? {
+              ...interview,
+              interviewQuestionCategory: selectedCategory,
+              question: selectedQuestion,
+              answer: interviewAnswer,
+            }
+          : interview
+      );
+      setInterviews(updatedInterviews);
+    } else {
+      const newInterviewEntry = {
+        id: uid(),
+        interviewQuestionCategory: selectedCategory,
+        question: selectedQuestion,
+        answer: interviewAnswer,
+      };
+      setInterviews([newInterviewEntry, ...interviews]);
+    }
 
-    setInterviews([newInterviewEntry, ...interviews]);
-
-    toggleModal(!isOpen);
+    closeModal(true);
     setStep(1);
     setSelectedCategory("");
     setSelectedQuestion("");
     setInterviewAnswer("");
-  };
+  }
+
+  function handleEdit(editedInterview) {
+    openModal(true);
+    setIsEditMode(true);
+    setSelectedInterview(editedInterview);
+    setSelectedCategory(editedInterview.interviewQuestionCategory);
+    setSelectedQuestion(editedInterview.question);
+    setInterviewAnswer(editedInterview.answer);
+  }
+
+  function handleDelete(interviewToDelete) {
+    setSelectedInterview(interviewToDelete);
+    setIsDeleteModalOpen(true);
+  }
+
+  function handleConfirmDelete() {
+    if (selectedInterview) {
+      const updatedInterviews = interviews.filter(
+        (interview) => interview.id !== selectedInterview.id
+      );
+      setInterviews(updatedInterviews);
+      closeModal();
+      setIsDeleteModalOpen(false);
+    }
+  }
+
+  function handleCancelDelete() {
+    setIsDeleteModalOpen(false);
+  }
 
   return (
     <>
-      <InterviewSection toggleModal={toggleModal} interviews={interviews} />
+      <InterviewSection
+        openModal={openModal}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        interviews={interviews}
+      />
+
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onCancel={handleCancelDelete}
+        onConfirmDelete={handleConfirmDelete}
+      />
+
       <Modal
+        closeModal={closeModal}
         isOpen={isOpen}
-        toggleModal={toggleModal}
+        isEditMode={isEditMode}
         step={step}
         selectedCategory={selectedCategory}
         selectedQuestion={selectedQuestion}
