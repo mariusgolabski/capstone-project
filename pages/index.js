@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { interviewsData as initialInterviews } from "../db/interviewQuestionsData";
+import { jobs as initialJobs } from "../db/jobs";
 import { uid } from "uid";
-import InterviewSection from "@/components/InterviewSection";
+import InterviewSection from "@/components/InterviewsSection";
 import Modal from "@/components/Modal";
 import DeleteConfirmationModal from "@/components/DeleteConfirmationModal";
+import TabButton from "@/components/TabButton";
+import JobsSection from "@/components/JobsSection";
+import TabNav from "@/components/TabNav";
 
 export default function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,6 +19,8 @@ export default function HomePage() {
   const [interviews, setInterviews] = useState(initialInterviews);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedInterview, setSelectedInterview] = useState("");
+  const [jobs, setJobs] = useState(initialJobs);
+  const [tab, setTab] = useState("interviews");
 
   useEffect(() => {
     const originalOverflow = document.body.style.overflow;
@@ -122,14 +128,35 @@ export default function HomePage() {
     setIsDeleteModalOpen(false);
   }
 
+  function selectTab(nextTab) {
+    setTab(nextTab);
+  }
+
   return (
     <>
-      <InterviewSection
-        openModal={openModal}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        interviews={interviews}
-      />
+      <TabNav>
+        <TabButton
+          isActive={tab === "interviews"}
+          onClick={() => selectTab("interviews")}
+        >
+          Interviews
+        </TabButton>
+
+        <TabButton isActive={tab === "jobs"} onClick={() => selectTab("jobs")}>
+          Jobs
+        </TabButton>
+      </TabNav>
+
+      {tab === "interviews" && (
+        <InterviewSection
+          openModal={openModal}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          interviews={interviews}
+        />
+      )}
+
+      {tab === "jobs" && <JobsSection jobs={jobs} />}
 
       <DeleteConfirmationModal
         isOpen={isDeleteModalOpen}

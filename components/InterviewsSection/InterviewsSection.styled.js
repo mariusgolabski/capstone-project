@@ -18,12 +18,9 @@ export const StyledOpenModalButton = styled.button`
   cursor: pointer;
   border-radius: 0.375rem;
   padding: 1rem 0;
-  border: none;
-  background-color: transparent;
+  border: 1px dashed #000;
+  background-color: #fff;
   &:hover {
-    margin: -1px;
-    border: 1px dashed #000;
-    background-color: #fff;
     ${AddInterviewSvg} {
       color: #05bc60;
     }

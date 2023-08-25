@@ -3,7 +3,7 @@ import {
   StyledSection,
   StyledOpenModalButton,
   AddInterviewSvg,
-} from "./InterviewSection.styled";
+} from "./InterviewsSection.styled";
 import InterviewFilter from "../InterviewFilter";
 import FilterButton from "../FilterButton";
 import Interview from "../Interview/index";
