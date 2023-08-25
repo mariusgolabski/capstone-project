@@ -16,6 +16,7 @@ export const StyledButton = styled.button`
   ${({ $isActive }) =>
     $isActive &&
     css`
+      color: #000;
       &:before {
         content: "";
         position: absolute;
