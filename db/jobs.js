@@ -4,9 +4,8 @@ export const jobs = [
     companyName: "NovaTech Solutions",
     title: "DataOps Engineer (m/f/d)",
     seniorityLevel: "Senior",
-    location: "Berlin",
     employmentType: "Full time",
-    annualSalary: "€ 75K - 95K",
+    location: "Berlin",
     mustHaveSkills: [
       "Test automation",
       "IaC (infrastructure as code)",
@@ -29,6 +28,7 @@ export const jobs = [
       "Redshift",
       "Golang",
     ],
+    annualSalary: "€ 75K - 95K",
     howToApply: "test@test.de",
   },
   {
