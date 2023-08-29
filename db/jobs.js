@@ -49,7 +49,7 @@ export const jobs = [
     ],
 
     annualSalaryRange: [75, 95],
-    howToApply: "test@test.de",
+    howToApply: "https://example.com/personio/123",
   },
   {
     id: "2",
@@ -83,7 +83,7 @@ export const jobs = [
       { value: "Airflow", label: "Airflow" },
       { value: "C/C++", label: "C/C++" },
     ],
-    howToApply: "test@test.de",
+    howToApply: "https://example.com/personio/123",
   },
 
   {
@@ -108,6 +108,6 @@ export const jobs = [
       { value: "C++", label: "C++" },
       { value: "Java", label: "Java" },
     ],
-    howToApply: "test@test.de",
+    howToApply: "https://example.com/personio/123",
   },
 ];
