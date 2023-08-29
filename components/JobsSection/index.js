@@ -4,10 +4,10 @@ import {
   StyledSection,
 } from "./JobsSection.styled";
 import Job from "../Job";
-export default function JobsSection({ jobs }) {
+export default function JobsSection({ jobs, openJobModal }) {
   return (
     <StyledSection>
-      <StyledOpenModalButton>
+      <StyledOpenModalButton onClick={openJobModal}>
         <AddJobSvg />
       </StyledOpenModalButton>
       {jobs.map((job) => (

@@ -21,11 +21,11 @@ export default function Job({ job }) {
           <Avatar />
           <StyledCompanyName>{job.companyName}</StyledCompanyName>
         </StyledAvatarWrapper>
-        <h2>{job.title}</h2>
-        <p>{job.annualSalary}</p>
+        <h2>{job.jobTitle}</h2>
+        <p>{`€ ${job.annualSalaryRange[0]} - ${job.annualSalaryRange[1]} K`}</p>
         <StyledSkillsWrapper>
           {job.mustHaveSkills.map((skill) => (
-            <StyledSkill key={skill}>{skill}</StyledSkill>
+            <StyledSkill key={skill.value}>{skill.value}</StyledSkill>
           ))}
         </StyledSkillsWrapper>
       </StyledContentWrapper>

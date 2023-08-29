@@ -1,35 +1,80 @@
 import React, { useEffect, useState } from "react";
 import { interviewsData as initialInterviews } from "../db/interviewQuestionsData";
 import { jobs as initialJobs } from "../db/jobs";
+import { skills } from "../db/skills";
 import { uid } from "uid";
+import TabNav from "@/components/TabNav";
 import InterviewSection from "@/components/InterviewsSection";
 import Modal from "@/components/Modal";
 import DeleteConfirmationModal from "@/components/DeleteConfirmationModal";
 import TabButton from "@/components/TabButton";
 import JobsSection from "@/components/JobsSection";
-import TabNav from "@/components/TabNav";
+import JobModal from "@/components/JobModal";
 
 export default function HomePage() {
+  const [tab, setTab] = useState("interviews");
+  const [interviews, setInterviews] = useState(initialInterviews);
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [step, setStep] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedQuestion, setSelectedQuestion] = useState("");
   const [interviewAnswer, setInterviewAnswer] = useState("");
-  const [interviews, setInterviews] = useState(initialInterviews);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedInterview, setSelectedInterview] = useState("");
+
   const [jobs, setJobs] = useState(initialJobs);
-  const [tab, setTab] = useState("interviews");
+  const [isJobModalOpen, setIsJobModalOpen] = useState(false);
+  const [jobStep, setJobStep] = useState(1);
+  const [jobFormData, setJobFormData] = useState({
+    companyName: "",
+    jobTitle: "",
+    seniorityLevel: "",
+    employmentType: "",
+    location: "",
+    mustHaveSkills: [],
+    niceToHaveSkills: [],
+    annualSalaryRange: [50, 75],
+    howToApply: "",
+  });
+
+  function handleInputChange(event) {
+    const { name, value } = event.target;
+    setJobFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  }
+
+  function handleMustHaveSkillsChange(selectedMustHaveSkills) {
+    setJobFormData((prevData) => ({
+      ...prevData,
+      mustHaveSkills: selectedMustHaveSkills,
+    }));
+  }
+
+  function handleNiceToHaveSkillsChange(selectedNicetoHaveSkills) {
+    setJobFormData((prevData) => ({
+      ...prevData,
+      niceToHaveSkills: selectedNicetoHaveSkills,
+    }));
+  }
+
+  function handleSalaryRangeChange(values) {
+    setJobFormData((prevData) => ({
+      ...prevData,
+      annualSalaryRange: values,
+    }));
+  }
 
   useEffect(() => {
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow =
-      isOpen || isDeleteModalOpen ? "hidden" : "unset";
+      isOpen || isJobModalOpen || isDeleteModalOpen ? "hidden" : "unset";
     return () => {
       document.body.style.overflow = originalOverflow;
     };
-  }, [isOpen, isDeleteModalOpen]);
+  }, [isOpen, isJobModalOpen, isDeleteModalOpen]);
 
   function openModal() {
     setIsOpen(true);
@@ -132,6 +177,74 @@ export default function HomePage() {
     setTab(nextTab);
   }
 
+  function openJobModal() {
+    setIsJobModalOpen(true);
+  }
+
+  function closeJobModal() {
+    setIsJobModalOpen(false);
+    setJobStep(1);
+  }
+
+  function handlePreviousJobStep() {
+    setJobStep((prevStep) => prevStep - 1);
+  }
+
+  // function handleNextJobStep() {
+  //   setJobStep((prevStep) => prevStep + 1);
+  // }
+
+  function handleNextJobStep(event) {
+    const formElement = event.target.closest("form"); // Find the closest <form> element
+    if (formElement) {
+      if (formElement.checkValidity()) {
+        // If the form is valid, prevent default form submission
+        event.preventDefault();
+
+        // Proceed to the next step
+        setJobStep((prevStep) => prevStep + 1);
+      } else {
+        // If the form is invalid, display validation errors
+        formElement.reportValidity();
+      }
+    }
+  }
+
+  function handleJobSubmit(event) {
+    event.preventDefault();
+
+    const newJob = {
+      id: uid(),
+      companyName: jobFormData.companyName,
+      jobTitle: jobFormData.jobTitle,
+      seniorityLevel: jobFormData.seniorityLevel,
+      employmentType: jobFormData.employmentType,
+      location: jobFormData.location,
+      mustHaveSkills: jobFormData.mustHaveSkills,
+      niceToHaveSkills: jobFormData.niceToHaveSkills,
+      annualSalaryRange: jobFormData.annualSalaryRange,
+      howToApply: jobFormData.howToApply,
+    };
+
+    // Call the setJobs function passed as a prop to update the jobs state in HomePage
+    setJobs((prevJobs) => [newJob, ...prevJobs]);
+
+    setJobFormData({
+      companyName: "",
+      jobTitle: "",
+      seniorityLevel: "",
+      employmentType: "",
+      location: "",
+      mustHaveSkills: [],
+      niceToHaveSkills: [],
+      annualSalaryRange: [50, 75],
+      howToApply: "",
+    });
+
+    // Close the job modal and reset the form data
+    closeJobModal();
+  }
+
   return (
     <>
       <TabNav>
@@ -156,7 +269,9 @@ export default function HomePage() {
         />
       )}
 
-      {tab === "jobs" && <JobsSection jobs={jobs} />}
+      {tab === "jobs" && (
+        <JobsSection jobs={jobs} openJobModal={openJobModal} />
+      )}
 
       <DeleteConfirmationModal
         isOpen={isDeleteModalOpen}
@@ -178,6 +293,22 @@ export default function HomePage() {
         interviewAnswer={interviewAnswer}
         handleInterviewAnswerChange={handleInterviewAnswerChange}
         handleSubmit={handleSubmit}
+      />
+
+      <JobModal
+        isJobModalOpen={isJobModalOpen}
+        jobStep={jobStep}
+        skills={skills}
+        setJobs={setJobs}
+        closeJobModal={closeJobModal}
+        handleNextJobStep={handleNextJobStep}
+        handlePreviousJobStep={handlePreviousJobStep}
+        handleInputChange={handleInputChange}
+        handleMustHaveSkillsChange={handleMustHaveSkillsChange}
+        handleNiceToHaveSkillsChange={handleNiceToHaveSkillsChange}
+        handleSalaryRangeChange={handleSalaryRangeChange}
+        handleJobSubmit={handleJobSubmit}
+        jobFormData={jobFormData}
       />
     </>
   );
