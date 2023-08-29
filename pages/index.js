@@ -179,7 +179,6 @@ export default function HomePage() {
       setDeleteContentType("");
     }
     setIsDeleteModalOpen(false);
-    closeModal();
   }
 
   function handleCancelDelete() {
