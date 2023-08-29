@@ -19,6 +19,7 @@ import {
 
 export default function JobModal({
   isJobModalOpen,
+  isJobModalEditMode,
   jobStep,
   skills,
   handlePreviousJobStep,
@@ -247,7 +248,9 @@ export default function JobModal({
                     <StyledButton onClick={handlePreviousJobStep}>
                       Back
                     </StyledButton>
-                    <StyledButton type="submit">Post</StyledButton>
+                    <StyledButton type="submit">
+                      {isJobModalEditMode ? "Save" : "Post"}
+                    </StyledButton>
                   </>
                 )}
               </StyledFooter>
