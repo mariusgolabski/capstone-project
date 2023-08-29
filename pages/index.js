@@ -23,9 +23,14 @@ export default function HomePage() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedInterview, setSelectedInterview] = useState("");
 
+  const [contentToDelete, setContentToDelete] = useState("");
+  const [deleteContentType, setDeleteContentType] = useState("");
+
   const [jobs, setJobs] = useState(initialJobs);
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
   const [jobStep, setJobStep] = useState(1);
+  const [isJobModalEditMode, setIsJobModalEditMode] = useState(false);
+  const [selectedJob, setSelectedJob] = useState("");
   const [jobFormData, setJobFormData] = useState({
     companyName: "",
     jobTitle: "",
@@ -153,23 +158,33 @@ export default function HomePage() {
     setInterviewAnswer(editedInterview.answer);
   }
 
-  function handleDelete(interviewToDelete) {
-    setSelectedInterview(interviewToDelete);
+  function handleDelete(content, contentType) {
+    setContentToDelete(content);
+    setDeleteContentType(contentType);
     setIsDeleteModalOpen(true);
   }
 
   function handleConfirmDelete() {
-    if (selectedInterview) {
-      const updatedInterviews = interviews.filter(
-        (interview) => interview.id !== selectedInterview.id
-      );
-      setInterviews(updatedInterviews);
-      closeModal();
-      setIsDeleteModalOpen(false);
+    if (contentToDelete) {
+      if (deleteContentType === "interview") {
+        const updatedInterviews = interviews.filter(
+          (interview) => interview.id !== contentToDelete.id
+        );
+        setInterviews(updatedInterviews);
+      } else if (deleteContentType === "job") {
+        const updatedJobs = jobs.filter((job) => job.id !== contentToDelete.id);
+        setJobs(updatedJobs);
+      }
+      setContentToDelete("");
+      setDeleteContentType("");
     }
+    setIsDeleteModalOpen(false);
+    closeModal();
   }
 
   function handleCancelDelete() {
+    setContentToDelete("");
+    setDeleteContentType("");
     setIsDeleteModalOpen(false);
   }
 
@@ -184,15 +199,24 @@ export default function HomePage() {
   function closeJobModal() {
     setIsJobModalOpen(false);
     setJobStep(1);
+    setIsJobModalEditMode(false);
+    setSelectedJob("");
+    setJobFormData({
+      companyName: "",
+      jobTitle: "",
+      seniorityLevel: "",
+      employmentType: "",
+      location: "",
+      mustHaveSkills: [],
+      niceToHaveSkills: [],
+      annualSalaryRange: [50, 75],
+      howToApply: "",
+    });
   }
 
   function handlePreviousJobStep() {
     setJobStep((prevStep) => prevStep - 1);
   }
-
-  // function handleNextJobStep() {
-  //   setJobStep((prevStep) => prevStep + 1);
-  // }
 
   function handleNextJobStep(event) {
     const formElement = event.target.closest("form"); // Find the closest <form> element
@@ -210,38 +234,65 @@ export default function HomePage() {
     }
   }
 
+  function handleJobEdit(editedJob) {
+    openJobModal(true);
+    setIsJobModalEditMode(true);
+    setSelectedJob(editedJob);
+    setJobFormData({
+      companyName: editedJob.companyName,
+      jobTitle: editedJob.jobTitle,
+      seniorityLevel: editedJob.seniorityLevel,
+      employmentType: editedJob.employmentType,
+      location: editedJob.location,
+      mustHaveSkills: editedJob.mustHaveSkills,
+      niceToHaveSkills: editedJob.niceToHaveSkills,
+      annualSalaryRange: editedJob.annualSalaryRange,
+      howToApply: editedJob.howToApply,
+    });
+  }
+
   function handleJobSubmit(event) {
     event.preventDefault();
 
-    const newJob = {
-      id: uid(),
-      companyName: jobFormData.companyName,
-      jobTitle: jobFormData.jobTitle,
-      seniorityLevel: jobFormData.seniorityLevel,
-      employmentType: jobFormData.employmentType,
-      location: jobFormData.location,
-      mustHaveSkills: jobFormData.mustHaveSkills,
-      niceToHaveSkills: jobFormData.niceToHaveSkills,
-      annualSalaryRange: jobFormData.annualSalaryRange,
-      howToApply: jobFormData.howToApply,
-    };
+    if (isJobModalEditMode) {
+      console.log("You are in Edit mode");
+      // Update existing job in the jobs array
+      const updatedJobs = jobs.map((job) =>
+        job.id === selectedJob.id
+          ? {
+              ...job,
+              companyName: jobFormData.companyName,
+              jobTitle: jobFormData.jobTitle,
+              seniorityLevel: jobFormData.seniorityLevel,
+              employmentType: jobFormData.employmentType,
+              location: jobFormData.location,
+              mustHaveSkills: jobFormData.mustHaveSkills,
+              niceToHaveSkills: jobFormData.niceToHaveSkills,
+              annualSalaryRange: jobFormData.annualSalaryRange,
+              howToApply: jobFormData.howToApply,
+            }
+          : job
+      );
 
-    // Call the setJobs function passed as a prop to update the jobs state in HomePage
-    setJobs((prevJobs) => [newJob, ...prevJobs]);
+      setJobs(updatedJobs);
+    } else {
+      // Create a new job and add it to the jobs array
+      const newJob = {
+        id: uid(),
+        companyName: jobFormData.companyName,
+        jobTitle: jobFormData.jobTitle,
+        seniorityLevel: jobFormData.seniorityLevel,
+        employmentType: jobFormData.employmentType,
+        location: jobFormData.location,
+        mustHaveSkills: jobFormData.mustHaveSkills,
+        niceToHaveSkills: jobFormData.niceToHaveSkills,
+        annualSalaryRange: jobFormData.annualSalaryRange,
+        howToApply: jobFormData.howToApply,
+      };
 
-    setJobFormData({
-      companyName: "",
-      jobTitle: "",
-      seniorityLevel: "",
-      employmentType: "",
-      location: "",
-      mustHaveSkills: [],
-      niceToHaveSkills: [],
-      annualSalaryRange: [50, 75],
-      howToApply: "",
-    });
+      setJobs((prevJobs) => [newJob, ...prevJobs]);
+    }
 
-    // Close the job modal and reset the form data
     closeJobModal();
   }
 
@@ -262,15 +313,20 @@ export default function HomePage() {
 
       {tab === "interviews" && (
         <InterviewSection
+          interviews={interviews}
           openModal={openModal}
           onEdit={handleEdit}
           onDelete={handleDelete}
-          interviews={interviews}
         />
       )}
 
       {tab === "jobs" && (
-        <JobsSection jobs={jobs} openJobModal={openJobModal} />
+        <JobsSection
+          jobs={jobs}
+          openJobModal={openJobModal}
+          onEdit={handleJobEdit}
+          onDelete={handleDelete}
+        />
       )}
 
       <DeleteConfirmationModal
@@ -297,6 +353,7 @@ export default function HomePage() {
 
       <JobModal
         isJobModalOpen={isJobModalOpen}
+        isJobModalEditMode={isJobModalEditMode}
         jobStep={jobStep}
         skills={skills}
         setJobs={setJobs}
@@ -309,6 +366,7 @@ export default function HomePage() {
         handleSalaryRangeChange={handleSalaryRangeChange}
         handleJobSubmit={handleJobSubmit}
         jobFormData={jobFormData}
+        selectedJob={selectedJob}
       />
     </>
   );
