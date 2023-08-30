@@ -65,7 +65,7 @@ export default function InterviewSection({
               answer={interview.answer}
               openModal={openModal}
               onEdit={() => onEdit(interview)}
-              onDelete={onDelete}
+              onDelete={() => onDelete(interview, "interview")}
             />
           </Fragment>
         );

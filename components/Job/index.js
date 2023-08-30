@@ -13,7 +13,7 @@ import {
   StyledAvatarWrapper,
 } from "./Job.Styled";
 
-export default function Job({ job }) {
+export default function Job({ job, onEdit, onDelete }) {
   return (
     <StyledCard>
       <StyledContentWrapper>
@@ -36,8 +36,8 @@ export default function Job({ job }) {
           <StyledListItem>{job.employmentType}</StyledListItem>
           <StyledListItem>{job.seniorityLevel}</StyledListItem>
         </StyledList>
-        <StyledButton>Edit</StyledButton>
-        <StyledButton>Delete</StyledButton>
+        <StyledButton onClick={() => onEdit(job)}>Edit</StyledButton>
+        <StyledButton onClick={() => onDelete(job, "job")}>Delete</StyledButton>
       </StyledFooter>
     </StyledCard>
   );
