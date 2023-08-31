@@ -7,7 +7,7 @@ import Job from "../Job";
 export default function JobsSection({ jobs, openJobModal, onEdit, onDelete }) {
   return (
     <StyledSection>
-      <StyledOpenModalButton onClick={openJobModal}>
+      <StyledOpenModalButton onClick={openJobModal} aria-label="Add Job">
         <AddJobSvg />
       </StyledOpenModalButton>
       {jobs.map((job) => (

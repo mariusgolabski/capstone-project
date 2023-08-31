@@ -41,7 +41,7 @@ export default function InterviewSection({
 
   return (
     <StyledSection>
-      <StyledOpenModalButton onClick={openModal}>
+      <StyledOpenModalButton onClick={openModal} aria-label="Add Interview">
         <AddInterviewSvg />
       </StyledOpenModalButton>
       <InterviewFilter>

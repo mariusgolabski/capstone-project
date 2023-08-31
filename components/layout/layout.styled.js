@@ -1,7 +1,6 @@
 import { styled } from "styled-components";
 
+// I will need the StyledMain later
 export const StyledMain = styled.main`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1.5rem;
+  padding-bottom: 4rem;
 `;

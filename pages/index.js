@@ -10,6 +10,8 @@ import DeleteConfirmationModal from "@/components/DeleteConfirmationModal";
 import TabButton from "@/components/TabButton";
 import JobsSection from "@/components/JobsSection";
 import JobModal from "@/components/JobModal";
+import ProfileHeader from "@/components/ProfileHeader";
+import { ProfileTabNavWrapper } from "@/components/ProfileTabNavWrapper/ProfileTabNavWrapper.Styled";
 
 export default function HomePage() {
   const [tab, setTab] = useState("interviews");
@@ -297,19 +299,23 @@ export default function HomePage() {
 
   return (
     <>
-      <TabNav>
-        <TabButton
-          isActive={tab === "interviews"}
-          onClick={() => selectTab("interviews")}
-        >
-          Interviews
-        </TabButton>
-
-        <TabButton isActive={tab === "jobs"} onClick={() => selectTab("jobs")}>
-          Jobs
-        </TabButton>
-      </TabNav>
-
+      <ProfileTabNavWrapper>
+        <ProfileHeader />
+        <TabNav>
+          <TabButton
+            isActive={tab === "interviews"}
+            onClick={() => selectTab("interviews")}
+          >
+            Interviews
+          </TabButton>
+          <TabButton
+            isActive={tab === "jobs"}
+            onClick={() => selectTab("jobs")}
+          >
+            Jobs
+          </TabButton>
+        </TabNav>
+      </ProfileTabNavWrapper>
       {tab === "interviews" && (
         <InterviewSection
           interviews={interviews}
