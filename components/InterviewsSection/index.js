@@ -42,7 +42,7 @@ export default function InterviewSection({
   return (
     <StyledSection>
       <StyledOpenModalButton onClick={openModal}>
-        <AddInterviewSvg />
+        <AddInterviewSvg aria-label="Add Interview" />
       </StyledOpenModalButton>
       <InterviewFilter>
         {interviewCategories.map((category) => (
