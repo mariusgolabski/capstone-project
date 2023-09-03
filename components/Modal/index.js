@@ -30,7 +30,6 @@ export default function Modal({
   interviewAnswer,
   closeModal,
 }) {
-  console.log(selectedCategory);
   const { data, error, isLoading } = useSWR("/api/categories");
 
   if (error) {
