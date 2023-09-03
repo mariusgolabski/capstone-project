@@ -381,7 +381,6 @@ export default function HomePage() {
         isOpen={isDeleteModalOpen}
         onCancel={handleCancelDelete}
         onConfirmDelete={handleConfirmDelete}
-        id={contentToDelete ? contentToDelete.id : null}
       />
 
       <Modal
