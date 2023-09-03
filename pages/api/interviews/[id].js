@@ -41,5 +41,11 @@ export default async function handler(request, response) {
         .status(500)
         .json({ error: "Internal server error while updating interview." });
     }
+  } else if (request.method === "DELETE") {
+    const { id } = request.query;
+    await Interview.findByIdAndDelete(id);
+    response.status(200).json({ message: "Interview successfully deleted." });
+  } else {
+    response.status(405).json({ error: "Method Not Allowed" });
   }
 }
