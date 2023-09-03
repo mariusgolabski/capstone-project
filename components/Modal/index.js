@@ -1,4 +1,5 @@
-import { categoriesQuestionsData } from "../../db/categoriesQuestions";
+// import { categoriesQuestionsData } from "../../db/categoriesQuestions";
+import useSWR from "swr";
 
 import {
   StyledHeader,
@@ -29,6 +30,20 @@ export default function Modal({
   interviewAnswer,
   closeModal,
 }) {
+  const { data, error, isLoading } = useSWR("/api/categories");
+
+  if (error) {
+    return <div>Failed to load category data.</div>;
+  }
+
+  if (isLoading) {
+    return <h1>Loading Categories...</h1>;
+  }
+
+  if (!data) {
+    return <div>No category data available.</div>;
+  }
+
   return (
     <>
       {isOpen && (
@@ -47,20 +62,20 @@ export default function Modal({
                 {step === 1 && (
                   <>
                     <label>Choose a Category:</label>
-                    {categoriesQuestionsData ? (
+                    {data ? (
                       <>
-                        {categoriesQuestionsData.map((category) => (
+                        {data.map((category) => (
                           <RadioButtonLabel
-                            key={category.id}
-                            selected={selectedCategory === category.name}
+                            key={category._id}
+                            selected={selectedCategory === category._id}
                           >
                             <RadioButton
                               type="radio"
                               name="category"
-                              value={category.name}
-                              checked={selectedCategory === category.name}
+                              value={category._id}
+                              checked={selectedCategory === category._id}
                               onChange={() =>
-                                handleCategoryChange(category.name)
+                                handleCategoryChange(category._id)
                               }
                             />
                             {category.name}
@@ -77,20 +92,20 @@ export default function Modal({
                   <>
                     <label>Pick Your Query:</label>
                     <>
-                      {categoriesQuestionsData
-                        .find((category) => category.name === selectedCategory)
+                      {data
+                        .find((category) => category._id === selectedCategory)
                         ?.questions.map((question) => (
                           <RadioButtonLabel
-                            key={question.id}
-                            selected={selectedQuestion === question.name}
+                            key={question._id}
+                            selected={selectedQuestion === question._id}
                           >
                             <RadioButton
                               type="radio"
                               name="question"
-                              value={question.name}
-                              checked={selectedQuestion === question.name}
+                              value={question._id}
+                              checked={selectedQuestion === question._id}
                               onChange={() =>
-                                handleQuestionChange(question.name)
+                                handleQuestionChange(question._id)
                               }
                             />
                             {question.name}
