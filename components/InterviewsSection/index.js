@@ -46,7 +46,7 @@ export default function InterviewSection({ openModal, onEdit, onDelete }) {
   }
 
   if (isLoading) {
-    return <p>Interviews....</p>;
+    return <p>Loading...</p>;
   }
 
   if (!interviews) {

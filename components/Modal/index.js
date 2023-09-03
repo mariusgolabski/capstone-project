@@ -37,7 +37,7 @@ export default function Modal({
   }
 
   if (isLoading) {
-    return <p>Loading Categories...</p>;
+    return <p>Loading...</p>;
   }
 
   if (!data) {
@@ -84,7 +84,7 @@ export default function Modal({
                         ))}
                       </>
                     ) : (
-                      <p>Loading categories...</p>
+                      <p>Loading...</p>
                     )}
                   </>
                 )}
