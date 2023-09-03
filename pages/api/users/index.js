@@ -3,7 +3,6 @@ import User from "../../../db/models/User";
 
 export default async function handler(request, response) {
   await dbConnect();
-
   if (request.method === "GET") {
     try {
       const users = await User.find();
