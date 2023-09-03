@@ -30,6 +30,7 @@ export default function Modal({
   interviewAnswer,
   closeModal,
 }) {
+  console.log(selectedCategory);
   const { data, error, isLoading } = useSWR("/api/categories");
 
   if (error) {
@@ -67,6 +68,7 @@ export default function Modal({
                         {data.map((category) => (
                           <RadioButtonLabel
                             key={category._id}
+                            data-category-name={category.name}
                             selected={selectedCategory === category._id}
                           >
                             <RadioButton
@@ -97,6 +99,7 @@ export default function Modal({
                         ?.questions.map((question) => (
                           <RadioButtonLabel
                             key={question._id}
+                            data-question-name={question.name}
                             selected={selectedQuestion === question._id}
                           >
                             <RadioButton
@@ -122,7 +125,19 @@ export default function Modal({
                       <StyledTextarea
                         name="interviewAnswer"
                         id="interviewAnswer"
-                        placeholder={`${selectedCategory} - ${selectedQuestion}`}
+                        placeholder={`${
+                          data.find(
+                            (category) => category._id === selectedCategory
+                          ).name
+                        } - ${
+                          data
+                            .find(
+                              (category) => category._id === selectedCategory
+                            )
+                            .questions.find(
+                              (question) => question._id === selectedQuestion
+                            ).name
+                        }`}
                         value={interviewAnswer}
                         onChange={handleInterviewAnswerChange}
                         required
