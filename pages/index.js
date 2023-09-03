@@ -1,5 +1,5 @@
+import { mutate } from "swr";
 import React, { useEffect, useState } from "react";
-import { interviewsData as initialInterviews } from "../db/interviewQuestionsData";
 import { jobs as initialJobs } from "../db/jobs";
 import { skills } from "../db/skills";
 import { uid } from "uid";
@@ -15,7 +15,6 @@ import { ProfileTabNavWrapper } from "@/components/ProfileTabNavWrapper/ProfileT
 
 export default function HomePage() {
   const [tab, setTab] = useState("interviews");
-  const [interviews, setInterviews] = useState(initialInterviews);
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [step, setStep] = useState(1);
@@ -104,14 +103,14 @@ export default function HomePage() {
     setStep((prevStep) => prevStep + 1);
   }
 
-  function handleCategoryChange(categoryName) {
-    setSelectedCategory(categoryName);
+  function handleCategoryChange(categoryId) {
+    setSelectedCategory(categoryId);
     setSelectedQuestion("");
     setInterviewAnswer("");
   }
 
-  function handleQuestionChange(question) {
-    setSelectedQuestion(question);
+  function handleQuestionChange(questionId) {
+    setSelectedQuestion(questionId);
     setInterviewAnswer("");
   }
 
@@ -119,69 +118,114 @@ export default function HomePage() {
     setInterviewAnswer(event.target.value);
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
-    if (isEditMode && selectedInterview) {
-      const updatedInterviews = interviews.map((interview) =>
-        interview.id === selectedInterview.id
-          ? {
-              ...interview,
-              interviewQuestionCategory: selectedCategory,
-              question: selectedQuestion,
-              answer: interviewAnswer,
-            }
-          : interview
-      );
-      setInterviews(updatedInterviews);
-    } else {
-      const newInterviewEntry = {
-        id: uid(),
-        interviewQuestionCategory: selectedCategory,
-        question: selectedQuestion,
-        answer: interviewAnswer,
-      };
-      setInterviews([newInterviewEntry, ...interviews]);
-    }
+    const userId = "64f0c5a8b979a78d64d3b750"; //for now hardcoded - replace with the actual user ID
 
-    closeModal(true);
-    setStep(1);
-    setSelectedCategory("");
-    setSelectedQuestion("");
-    setInterviewAnswer("");
+    const interviewData = {
+      userId: userId,
+      category: selectedCategory,
+      question: selectedQuestion,
+      answer: interviewAnswer,
+    };
+
+    if (isEditMode && selectedInterview) {
+      try {
+        const response = await fetch(
+          `/api/interviews/${selectedInterview._id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(interviewData),
+          }
+        );
+
+        if (response.ok) {
+          // Update the SWR cache by calling mutate with the appropriate key
+          mutate(`/api/interviews/${userId}`);
+          closeModal(true);
+          setStep(1);
+          setSelectedCategory("");
+          setSelectedQuestion("");
+          setInterviewAnswer("");
+        } else {
+          console.error("Failed to update interview");
+        }
+      } catch (error) {
+        console.error("Error updating interview:", error);
+      }
+    } else {
+      try {
+        const response = await fetch(`/api/interviews`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(interviewData),
+        });
+
+        if (response.ok) {
+          // Update the SWR cache by calling mutate with the appropriate key
+          mutate(`/api/interviews/${userId}`);
+          closeModal(true);
+          setStep(1);
+          setSelectedCategory("");
+          setSelectedQuestion("");
+          setInterviewAnswer("");
+        } else {
+          console.error("Failed to create interview");
+        }
+      } catch (error) {
+        console.error("Error creating interview:", error);
+      }
+    }
   }
 
   function handleEdit(editedInterview) {
     openModal(true);
     setIsEditMode(true);
     setSelectedInterview(editedInterview);
-    setSelectedCategory(editedInterview.interviewQuestionCategory);
-    setSelectedQuestion(editedInterview.question);
+    setSelectedCategory(editedInterview.category._id);
+    setSelectedQuestion(editedInterview.question._id);
     setInterviewAnswer(editedInterview.answer);
   }
 
-  function handleDelete(content, contentType) {
+  const handleDelete = async (content, contentType) => {
     setContentToDelete(content);
     setDeleteContentType(contentType);
     setIsDeleteModalOpen(true);
-  }
+  };
 
-  function handleConfirmDelete() {
-    if (contentToDelete) {
-      if (deleteContentType === "interview") {
-        const updatedInterviews = interviews.filter(
-          (interview) => interview.id !== contentToDelete.id
+  const handleConfirmDelete = async () => {
+    if (contentToDelete && deleteContentType) {
+      try {
+        const response = await fetch(
+          `/api/${deleteContentType}/${contentToDelete._id}`,
+          {
+            method: "DELETE",
+          }
         );
-        setInterviews(updatedInterviews);
-      } else if (deleteContentType === "job") {
-        const updatedJobs = jobs.filter((job) => job.id !== contentToDelete.id);
-        setJobs(updatedJobs);
+        if (response.ok) {
+          //update the cached data
+          mutate(`/api/interviews/64f0c5a8b979a78d64d3b750`, (interviews) =>
+            interviews.filter(
+              (interview) => interview._id !== contentToDelete._id
+            )
+          );
+        } else {
+          console.error("Failed to delete content");
+        }
+      } catch (error) {
+        console.error("Error deleting content:", error);
       }
+      setIsDeleteModalOpen(false);
       setContentToDelete("");
       setDeleteContentType("");
     }
-    setIsDeleteModalOpen(false);
-  }
+  };
 
   function handleCancelDelete() {
     setContentToDelete("");
@@ -318,7 +362,6 @@ export default function HomePage() {
       </ProfileTabNavWrapper>
       {tab === "interviews" && (
         <InterviewSection
-          interviews={interviews}
           openModal={openModal}
           onEdit={handleEdit}
           onDelete={handleDelete}
@@ -338,6 +381,7 @@ export default function HomePage() {
         isOpen={isDeleteModalOpen}
         onCancel={handleCancelDelete}
         onConfirmDelete={handleConfirmDelete}
+        id={contentToDelete ? contentToDelete.id : null}
       />
 
       <Modal
