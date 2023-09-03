@@ -42,15 +42,15 @@ export default function InterviewSection({ openModal, onEdit, onDelete }) {
   }
 
   if (error) {
-    return <div>Failed to load interview data.</div>;
+    return <p>Failed to load interview data.</p>;
   }
 
   if (isLoading) {
-    return <h1>Interviews....</h1>;
+    return <p>Interviews....</p>;
   }
 
   if (!interviews) {
-    return <div>No interview data available.</div>;
+    return <p>No interview data available.</p>;
   }
 
   return (
