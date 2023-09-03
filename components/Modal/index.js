@@ -33,15 +33,15 @@ export default function Modal({
   const { data, error, isLoading } = useSWR("/api/categories");
 
   if (error) {
-    return <div>Failed to load category data.</div>;
+    return <p>Failed to load category data.</p>;
   }
 
   if (isLoading) {
-    return <h1>Loading Categories...</h1>;
+    return <p>Loading Categories...</p>;
   }
 
   if (!data) {
-    return <div>No category data available.</div>;
+    return <p>No category data available.</p>;
   }
 
   return (
