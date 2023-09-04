@@ -11,7 +11,7 @@ export default function JobsSection({ jobs, openJobModal, onEdit, onDelete }) {
         <AddJobSvg />
       </StyledOpenModalButton>
       {jobs.map((job) => (
-        <Job job={job} key={job.id} onEdit={onEdit} onDelete={onDelete} />
+        <Job job={job} key={job._id} onEdit={onEdit} onDelete={onDelete} />
       ))}
     </StyledSection>
   );
