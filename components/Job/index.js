@@ -37,7 +37,9 @@ export default function Job({ job, onEdit, onDelete }) {
           <StyledListItem>{job.seniorityLevel}</StyledListItem>
         </StyledList>
         <StyledButton onClick={() => onEdit(job)}>Edit</StyledButton>
-        <StyledButton onClick={() => onDelete(job, "job")}>Delete</StyledButton>
+        <StyledButton onClick={() => onDelete(job, "jobs")}>
+          Delete
+        </StyledButton>
       </StyledFooter>
     </StyledCard>
   );
