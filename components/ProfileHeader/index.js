@@ -19,15 +19,15 @@ export default function ProfileHeader() {
   );
 
   if (error) {
-    return <div>Failed to load user data.</div>;
+    return <p>Failed to load user data.</p>;
   }
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <p>Loading...</p>;
   }
 
   if (!data) {
-    return <div>No user data available.</div>;
+    return <p>No user data available.</p>;
   }
 
   return (

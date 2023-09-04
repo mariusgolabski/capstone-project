@@ -1,3 +1,4 @@
+import useSWR from "swr";
 import { Fragment, useState } from "react";
 import {
   StyledSection,
@@ -17,12 +18,14 @@ const interviewCategories = [
   "Leadership",
 ];
 
-export default function InterviewSection({
-  interviews,
-  openModal,
-  onEdit,
-  onDelete,
-}) {
+const userId = "64f0c5a8b979a78d64d3b750";
+export default function InterviewSection({ openModal, onEdit, onDelete }) {
+  const {
+    data: interviews,
+    error,
+    isLoading,
+  } = useSWR(`/api/interviews/${userId}`);
+
   const [selectedCategory, setSelectedCategory] = useState(
     interviewCategories[0]
   );
@@ -31,12 +34,23 @@ export default function InterviewSection({
     selectedCategory === "All"
       ? interviews
       : interviews.filter(
-          (interview) =>
-            interview.interviewQuestionCategory === selectedCategory
+          (interview) => interview.category.name === selectedCategory
         );
 
   function handleCategoryChange(category) {
     setSelectedCategory(category);
+  }
+
+  if (error) {
+    return <p>Failed to load interview data.</p>;
+  }
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (!interviews) {
+    return <p>No interview data available.</p>;
   }
 
   return (
@@ -56,16 +70,16 @@ export default function InterviewSection({
       </InterviewFilter>
       {filteredInterviews.map((interview) => {
         return (
-          <Fragment key={interview.id}>
+          <Fragment key={interview._id}>
             <Interview
-              key={interview.id}
+              key={interview._id}
               interview={interview}
-              category={interview.interviewQuestionCategory}
-              question={interview.question}
+              category={interview.category.name}
+              question={interview.question.name}
               answer={interview.answer}
               openModal={openModal}
               onEdit={() => onEdit(interview)}
-              onDelete={() => onDelete(interview, "interview")}
+              onDelete={() => onDelete(interview, "interviews")}
             />
           </Fragment>
         );

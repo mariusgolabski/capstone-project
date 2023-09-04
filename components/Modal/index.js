@@ -1,4 +1,5 @@
-import { categoriesQuestionsData } from "../../db/categoriesQuestions";
+// import { categoriesQuestionsData } from "../../db/categoriesQuestions";
+import useSWR from "swr";
 
 import {
   StyledHeader,
@@ -29,6 +30,20 @@ export default function Modal({
   interviewAnswer,
   closeModal,
 }) {
+  const { data, error, isLoading } = useSWR("/api/categories");
+
+  if (error) {
+    return <p>Failed to load category data.</p>;
+  }
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (!data) {
+    return <p>No category data available.</p>;
+  }
+
   return (
     <>
       {isOpen && (
@@ -47,20 +62,21 @@ export default function Modal({
                 {step === 1 && (
                   <>
                     <label>Choose a Category:</label>
-                    {categoriesQuestionsData ? (
+                    {data ? (
                       <>
-                        {categoriesQuestionsData.map((category) => (
+                        {data.map((category) => (
                           <RadioButtonLabel
-                            key={category.id}
-                            selected={selectedCategory === category.name}
+                            key={category._id}
+                            data-category-name={category.name}
+                            selected={selectedCategory === category._id}
                           >
                             <RadioButton
                               type="radio"
                               name="category"
-                              value={category.name}
-                              checked={selectedCategory === category.name}
+                              value={category._id}
+                              checked={selectedCategory === category._id}
                               onChange={() =>
-                                handleCategoryChange(category.name)
+                                handleCategoryChange(category._id)
                               }
                             />
                             {category.name}
@@ -68,7 +84,7 @@ export default function Modal({
                         ))}
                       </>
                     ) : (
-                      <p>Loading categories...</p>
+                      <p>Loading...</p>
                     )}
                   </>
                 )}
@@ -77,20 +93,21 @@ export default function Modal({
                   <>
                     <label>Pick Your Query:</label>
                     <>
-                      {categoriesQuestionsData
-                        .find((category) => category.name === selectedCategory)
+                      {data
+                        .find((category) => category._id === selectedCategory)
                         ?.questions.map((question) => (
                           <RadioButtonLabel
-                            key={question.id}
-                            selected={selectedQuestion === question.name}
+                            key={question._id}
+                            data-question-name={question.name}
+                            selected={selectedQuestion === question._id}
                           >
                             <RadioButton
                               type="radio"
                               name="question"
-                              value={question.name}
-                              checked={selectedQuestion === question.name}
+                              value={question._id}
+                              checked={selectedQuestion === question._id}
                               onChange={() =>
-                                handleQuestionChange(question.name)
+                                handleQuestionChange(question._id)
                               }
                             />
                             {question.name}
@@ -107,7 +124,19 @@ export default function Modal({
                       <StyledTextarea
                         name="interviewAnswer"
                         id="interviewAnswer"
-                        placeholder={`${selectedCategory} - ${selectedQuestion}`}
+                        placeholder={`${
+                          data.find(
+                            (category) => category._id === selectedCategory
+                          ).name
+                        } - ${
+                          data
+                            .find(
+                              (category) => category._id === selectedCategory
+                            )
+                            .questions.find(
+                              (question) => question._id === selectedQuestion
+                            ).name
+                        }`}
                         value={interviewAnswer}
                         onChange={handleInterviewAnswerChange}
                         required
