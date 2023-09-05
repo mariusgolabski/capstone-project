@@ -1,8 +1,6 @@
+import useSWR from "swr";
 import { mutate } from "swr";
 import React, { useEffect, useState } from "react";
-import { jobs as initialJobs } from "../db/jobs";
-import { skills } from "../db/skills";
-import { uid } from "uid";
 import TabNav from "@/components/TabNav";
 import InterviewSection from "@/components/InterviewsSection";
 import Modal from "@/components/Modal";
@@ -27,7 +25,9 @@ export default function HomePage() {
   const [contentToDelete, setContentToDelete] = useState("");
   const [deleteContentType, setDeleteContentType] = useState("");
 
-  const [jobs, setJobs] = useState(initialJobs);
+  const { data: skills } = useSWR(`/api/skills`);
+  const { data: jobs } = useSWR(`/api/jobs`);
+
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
   const [jobStep, setJobStep] = useState(1);
   const [isJobModalEditMode, setIsJobModalEditMode] = useState(false);
@@ -144,7 +144,6 @@ export default function HomePage() {
         );
 
         if (response.ok) {
-          // Update the SWR cache by calling mutate with the appropriate key
           mutate(`/api/interviews/${userId}`);
           closeModal(true);
           setStep(1);
@@ -168,7 +167,6 @@ export default function HomePage() {
         });
 
         if (response.ok) {
-          // Update the SWR cache by calling mutate with the appropriate key
           mutate(`/api/interviews/${userId}`);
           closeModal(true);
           setStep(1);
@@ -193,13 +191,13 @@ export default function HomePage() {
     setInterviewAnswer(editedInterview.answer);
   }
 
-  const handleDelete = async (content, contentType) => {
+  function handleDelete(content, contentType) {
     setContentToDelete(content);
     setDeleteContentType(contentType);
     setIsDeleteModalOpen(true);
-  };
+  }
 
-  const handleConfirmDelete = async () => {
+  async function handleConfirmDelete() {
     if (contentToDelete && deleteContentType) {
       try {
         const response = await fetch(
@@ -209,23 +207,22 @@ export default function HomePage() {
           }
         );
         if (response.ok) {
-          //update the cached data
-          mutate(`/api/interviews/64f0c5a8b979a78d64d3b750`, (interviews) =>
-            interviews.filter(
-              (interview) => interview._id !== contentToDelete._id
-            )
-          );
+          if (deleteContentType === "interviews") {
+            mutate(`/api/${deleteContentType}/${contentToDelete.userId}`);
+          } else if (deleteContentType === "jobs") {
+            mutate(`/api/${deleteContentType}`);
+          }
         } else {
-          console.error("Failed to delete content");
+          console.error(`Failed to delete ${deleteContentType}`);
         }
       } catch (error) {
-        console.error("Error deleting content:", error);
+        console.error(`Error deleting ${deleteContentType}:`, error);
       }
       setIsDeleteModalOpen(false);
       setContentToDelete("");
       setDeleteContentType("");
     }
-  };
+  }
 
   function handleCancelDelete() {
     setContentToDelete("");
@@ -279,65 +276,85 @@ export default function HomePage() {
     }
   }
 
-  function handleJobEdit(editedJob) {
+  function handleJobEdit(job) {
     openJobModal(true);
     setIsJobModalEditMode(true);
-    setSelectedJob(editedJob);
+    setSelectedJob(job);
     setJobFormData({
-      companyName: editedJob.companyName,
-      jobTitle: editedJob.jobTitle,
-      seniorityLevel: editedJob.seniorityLevel,
-      employmentType: editedJob.employmentType,
-      location: editedJob.location,
-      mustHaveSkills: editedJob.mustHaveSkills,
-      niceToHaveSkills: editedJob.niceToHaveSkills,
-      annualSalaryRange: editedJob.annualSalaryRange,
-      howToApply: editedJob.howToApply,
+      _id: job._id,
+      companyName: job.companyName,
+      jobTitle: job.jobTitle,
+      seniorityLevel: job.seniorityLevel,
+      employmentType: job.employmentType,
+      location: job.location,
+      mustHaveSkills: job.mustHaveSkills,
+      niceToHaveSkills: job.niceToHaveSkills,
+      annualSalaryRange: job.annualSalaryRange,
+      howToApply: job.howToApply,
     });
   }
 
-  function handleJobSubmit(event) {
+  async function handleJobSubmit(event) {
     event.preventDefault();
 
+    const mustHaveSkillIds = jobFormData.mustHaveSkills.map(
+      (skill) => skill._id
+    );
+    const niceToHaveSkillIds = jobFormData.niceToHaveSkills.map(
+      (skill) => skill._id
+    );
+
+    const formData = {
+      _id: jobFormData._id,
+      companyName: jobFormData.companyName,
+      jobTitle: jobFormData.jobTitle,
+      seniorityLevel: jobFormData.seniorityLevel,
+      employmentType: jobFormData.employmentType,
+      location: jobFormData.location,
+      mustHaveSkills: mustHaveSkillIds,
+      niceToHaveSkills: niceToHaveSkillIds,
+      annualSalaryRange: jobFormData.annualSalaryRange,
+      howToApply: jobFormData.howToApply,
+    };
+
     if (isJobModalEditMode) {
-      console.log("You are in Edit mode");
-      // Update existing job in the jobs array
-      const updatedJobs = jobs.map((job) =>
-        job.id === selectedJob.id
-          ? {
-              ...job,
-              companyName: jobFormData.companyName,
-              jobTitle: jobFormData.jobTitle,
-              seniorityLevel: jobFormData.seniorityLevel,
-              employmentType: jobFormData.employmentType,
-              location: jobFormData.location,
-              mustHaveSkills: jobFormData.mustHaveSkills,
-              niceToHaveSkills: jobFormData.niceToHaveSkills,
-              annualSalaryRange: jobFormData.annualSalaryRange,
-              howToApply: jobFormData.howToApply,
-            }
-          : job
-      );
+      try {
+        const response = await fetch(`/api/jobs/${selectedJob._id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(jobFormData), // Send the updated job data
+        });
 
-      setJobs(updatedJobs);
+        if (response.ok) {
+          mutate(`/api/jobs`);
+          closeJobModal();
+        } else {
+          console.error("Failed to update job");
+        }
+      } catch (error) {
+        console.error("Error updating job:", error);
+      }
     } else {
-      // Create a new job and add it to the jobs array
-      const newJob = {
-        id: uid(),
-        companyName: jobFormData.companyName,
-        jobTitle: jobFormData.jobTitle,
-        seniorityLevel: jobFormData.seniorityLevel,
-        employmentType: jobFormData.employmentType,
-        location: jobFormData.location,
-        mustHaveSkills: jobFormData.mustHaveSkills,
-        niceToHaveSkills: jobFormData.niceToHaveSkills,
-        annualSalaryRange: jobFormData.annualSalaryRange,
-        howToApply: jobFormData.howToApply,
-      };
+      try {
+        const response = await fetch(`/api/jobs`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
 
-      setJobs((prevJobs) => [newJob, ...prevJobs]);
+        if (response.ok) {
+          mutate(`/api/jobs`);
+        } else {
+          console.error("Failed to create job");
+        }
+      } catch (error) {
+        console.error("Error creating job:", error);
+      }
     }
-
     closeJobModal();
   }
 
@@ -404,7 +421,6 @@ export default function HomePage() {
         isJobModalEditMode={isJobModalEditMode}
         jobStep={jobStep}
         skills={skills}
-        setJobs={setJobs}
         closeJobModal={closeJobModal}
         handleNextJobStep={handleNextJobStep}
         handlePreviousJobStep={handlePreviousJobStep}
