@@ -1,8 +1,6 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-mongoose.set("debug", true);
-
 const userSchema = new Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
@@ -11,6 +9,7 @@ const userSchema = new Schema({
   userCoverImagePath: { type: String, required: true },
   userProfileImagePath: { type: String, required: true },
   email: { type: String, required: true },
+  githubId: { type: String },
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);
