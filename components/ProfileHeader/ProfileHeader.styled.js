@@ -11,7 +11,6 @@ export const StyledProfileHeaderWrapper = styled.div`
 `;
 
 export const SyledProfileCoverWrapper = styled.div`
-  border-radius: 0.5rem;
   width: 100%;
   height: 22rem;
   @media (max-width: 600px) {
@@ -24,6 +23,8 @@ export const StyledCoverImage = styled(Image)`
   height: 100%;
   object-fit: cover;
   border-radius: 0.5rem;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
 `;
 
 export const StyledUserProfileCard = styled.div`
