@@ -1,39 +1,46 @@
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
+import CredentialsProvider from "next-auth/providers/credentials";
 import User from "@/db/models/User";
 
 let savedUser = null;
 
+const fakeLogin = CredentialsProvider({
+  name: "Credentials",
+  credentials: {
+    username: { label: "Username", type: "text", placeholder: "testuser" },
+    password: { label: "Password", type: "password", placeholder: "testuser" },
+  },
+  // and adding a fake authorization with static username and password:
+  async authorize(credentials) {
+    if (
+      credentials.username === "testuser" &&
+      credentials.password === "testuser"
+    ) {
+      return {
+        id: "1",
+        name: "testuser",
+        email: "test@test.de",
+      };
+    } else {
+      return null;
+    }
+  },
+});
+
+const providers =
+  process.env.VERCEL_ENV === "preview"
+    ? [fakeLogin]
+    : [
+        GithubProvider({
+          clientId: process.env.GITHUB_ID,
+          clientSecret: process.env.GITHUB_SECRET,
+        }),
+        // ...add more providers here
+      ];
+
 export const authOptions = {
-  providers: [
-    GithubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
-      // httpOptions: {
-      // https://github.com/nextauthjs/next-auth/issues/3920
-      //
-      //         https://next-auth.js.org/errors#oauth_callback_error connect ETIMEDOUT 140.82.121.5:443 {
-      //   error: Error: connect ETIMEDOUT 140.82.121.5:443
-      //       at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1595:16) {
-      //     name: 'OAuthCallbackError',
-      //     code: 'ETIMEDOUT'
-      //   },
-      //   providerId: 'github',
-      //   message: 'connect ETIMEDOUT 140.82.121.5:443'
-      // }
-
-      //         Whoa there!
-      // You have exceeded a secondary rate limit.
-
-      // Please wait a few minutes before you try again;
-      // in some cases this may take up to an hour.
-
-      //   timeout: 40000,
-      // only local?!
-      // },
-    }),
-  ],
-
+  providers,
   callbacks: {
     async signIn({ account, profile }) {
       if (account.provider === "github") {
