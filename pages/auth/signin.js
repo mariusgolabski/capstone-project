@@ -9,7 +9,7 @@ import {
   StyledLogin,
   StyledLoginButton,
   Wrapper,
-} from "./signin.styled";
+} from "../../components/SignIn/SignIn.styled";
 
 export default function Signin({ csrfToken, providers }) {
   return (
