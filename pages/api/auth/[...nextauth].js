@@ -18,16 +18,7 @@ const fakeLogin = CredentialsProvider({
       credentials.password === "testuser"
     ) {
       return {
-        _id: "64f7ca73e809f9f149e39936",
-        firstName: "test",
-        lastName: "test",
-        jobTitle: "test",
-        companyName: "test",
-        userCoverImagePath: "/bg3.jpg",
-        userProfileImagePath:
-          "https://avatars.githubusercontent.com/u/22275708?v=4",
-        email: "m.golabski@gmx.de",
-        githubId: "22275708",
+        id: "64f7ca73e809f9f149e39936",
       };
     } else {
       return null;
@@ -85,14 +76,16 @@ export const authOptions = {
     },
 
     async jwt({ token, user }) {
-      if (user && savedUser) {
-        token.id = savedUser._id.toString();
+      if (user) {
+        token.id = user._id ? user._id.toString() : null;
       }
       return token;
     },
 
     async session({ session, token }) {
-      session.user.id = token.id;
+      if (token.id) {
+        session.user.id = token.id;
+      }
       return session;
     },
   },
