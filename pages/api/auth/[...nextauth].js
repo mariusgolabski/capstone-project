@@ -18,9 +18,16 @@ const fakeLogin = CredentialsProvider({
       credentials.password === "testuser"
     ) {
       return {
-        id: "1",
-        name: "testuser",
-        email: "test@test.de",
+        _id: "64f7ca73e809f9f149e39936",
+        firstName: "test",
+        lastName: "test",
+        jobTitle: "test",
+        companyName: "test",
+        userCoverImagePath: "/bg3.jpg",
+        userProfileImagePath:
+          "https://avatars.githubusercontent.com/u/22275708?v=4",
+        email: "m.golabski@gmx.de",
+        githubId: "22275708",
       };
     } else {
       return null;

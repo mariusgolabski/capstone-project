@@ -21,7 +21,7 @@ export default function Signin({ providers }) {
           {providers &&
             Object.values(providers).map((provider) => (
               <div key={provider.name}>
-                <StyledButton onClick={() => signIn(provider.id)}>
+                <StyledButton onClick={() => signIn()}>
                   Sign in with {provider.name}
                 </StyledButton>
               </div>
