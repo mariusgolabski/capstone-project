@@ -18,8 +18,12 @@ const interviewCategories = [
   "Leadership",
 ];
 
-const userId = "64f0c5a8b979a78d64d3b750";
-export default function InterviewSection({ openModal, onEdit, onDelete }) {
+export default function InterviewSection({
+  userId,
+  openModal,
+  onEdit,
+  onDelete,
+}) {
   const {
     data: interviews,
     error,
