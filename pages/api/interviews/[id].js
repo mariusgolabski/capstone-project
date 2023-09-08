@@ -16,8 +16,6 @@ export default async function handler(request, response) {
 
   const sessionUserId = session.user.id;
 
-  // check
-
   if (request.method === "GET") {
     try {
       const userInterviews = await Interview.find({
@@ -89,25 +87,5 @@ export default async function handler(request, response) {
         .status(500)
         .json({ error: "Internal server error while deleting interview." });
     }
-  } else if (request.method === "POST") {
-    try {
-      const interviewData = {
-        ...request.body, // spread existing interview data
-        userId: sessionUserId, // add sessionUserId
-      };
-
-      const interview = new Interview(interviewData);
-      await interview.save();
-
-      return response
-        .status(201)
-        .json({ message: "Interview successfully created" });
-    } catch (error) {
-      return response
-        .status(400)
-        .json({ error: "Failed to create interview", message: error.message });
-    }
-  } else {
-    return response.status(405).end("Method Not Allowed");
   }
 }
