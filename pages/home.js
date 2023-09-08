@@ -131,7 +131,7 @@ export default function Home() {
     event.preventDefault();
 
     const interviewData = {
-      userId: userId,
+      id: userId,
       category: selectedCategory,
       question: selectedQuestion,
       answer: interviewAnswer,
@@ -139,6 +139,7 @@ export default function Home() {
 
     if (isEditMode && selectedInterview) {
       try {
+        console.log(interviewData);
         const response = await fetch(
           `/api/interviews/${selectedInterview._id}`,
           {
