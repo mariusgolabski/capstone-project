@@ -7,7 +7,6 @@ export default async function handler(request, response) {
   await dbConnect();
 
   const { id: interviewId } = request.query;
-
   const session = await getServerSession(request, response, authOptions);
 
   if (!session) {
@@ -76,8 +75,6 @@ export default async function handler(request, response) {
           .status(401)
           .json({ message: "Unauthorized, wrong user." });
       }
-
-      // Delete the interview
       await Interview.findByIdAndDelete(interviewId);
       return response
         .status(200)
@@ -87,5 +84,7 @@ export default async function handler(request, response) {
         .status(500)
         .json({ error: "Internal server error while deleting interview." });
     }
+  } else {
+    return response.status(405).end("Method Not Allowed");
   }
 }
