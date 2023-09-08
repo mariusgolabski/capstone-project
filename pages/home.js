@@ -12,11 +12,11 @@ import JobModal from "@/components/JobModal";
 import ProfileHeader from "@/components/ProfileHeader";
 import { ProfileTabNavWrapper } from "@/components/ProfileTabNavWrapper/ProfileTabNavWrapper.Styled";
 import Header from "@/components/Header";
+import Link from "next/link";
 
 export default function Home() {
   const { data: session, status } = useSession();
   const userId = session?.user?.id;
-  console.log(userId);
 
   const [tab, setTab] = useState("interviews");
   const [isOpen, setIsOpen] = useState(false);
@@ -131,7 +131,7 @@ export default function Home() {
     event.preventDefault();
 
     const interviewData = {
-      id: userId,
+      // id: userId,
       category: selectedCategory,
       question: selectedQuestion,
       answer: interviewAnswer,
@@ -368,84 +368,88 @@ export default function Home() {
     closeJobModal();
   }
 
-  return (
-    <>
-      <Header />
+  if (status === "authenticated") {
+    return (
+      <>
+        <Header />
 
-      <ProfileTabNavWrapper>
-        <ProfileHeader />
-        <TabNav>
-          <TabButton
-            isActive={tab === "interviews"}
-            onClick={() => selectTab("interviews")}
-          >
-            Interviews
-          </TabButton>
-          <TabButton
-            isActive={tab === "jobs"}
-            onClick={() => selectTab("jobs")}
-          >
-            Jobs
-          </TabButton>
-        </TabNav>
-      </ProfileTabNavWrapper>
+        <ProfileTabNavWrapper>
+          <ProfileHeader />
+          <TabNav>
+            <TabButton
+              isActive={tab === "interviews"}
+              onClick={() => selectTab("interviews")}
+            >
+              Interviews
+            </TabButton>
+            <TabButton
+              isActive={tab === "jobs"}
+              onClick={() => selectTab("jobs")}
+            >
+              Jobs
+            </TabButton>
+          </TabNav>
+        </ProfileTabNavWrapper>
 
-      {tab === "interviews" && (
-        <InterviewSection
-          userId={userId}
-          openModal={openModal}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
+        {tab === "interviews" && (
+          <InterviewSection
+            userId={userId}
+            openModal={openModal}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        )}
+
+        {tab === "jobs" && (
+          <JobsSection
+            userId={userId}
+            openJobModal={openJobModal}
+            onEdit={handleJobEdit}
+            onDelete={handleDelete}
+          />
+        )}
+
+        <DeleteConfirmationModal
+          isOpen={isDeleteModalOpen}
+          onCancel={handleCancelDelete}
+          onConfirmDelete={handleConfirmDelete}
         />
-      )}
 
-      {tab === "jobs" && (
-        <JobsSection
-          userId={userId}
-          openJobModal={openJobModal}
-          onEdit={handleJobEdit}
-          onDelete={handleDelete}
+        <Modal
+          closeModal={closeModal}
+          isOpen={isOpen}
+          isEditMode={isEditMode}
+          step={step}
+          selectedCategory={selectedCategory}
+          selectedQuestion={selectedQuestion}
+          handlePreviousStep={handlePreviousStep}
+          handleNextStep={handleNextStep}
+          handleQuestionChange={handleQuestionChange}
+          handleCategoryChange={handleCategoryChange}
+          interviewAnswer={interviewAnswer}
+          handleInterviewAnswerChange={handleInterviewAnswerChange}
+          handleSubmit={handleSubmit}
         />
-      )}
 
-      <DeleteConfirmationModal
-        isOpen={isDeleteModalOpen}
-        onCancel={handleCancelDelete}
-        onConfirmDelete={handleConfirmDelete}
-      />
+        <JobModal
+          isJobModalOpen={isJobModalOpen}
+          isJobModalEditMode={isJobModalEditMode}
+          jobStep={jobStep}
+          skills={skills}
+          closeJobModal={closeJobModal}
+          handleNextJobStep={handleNextJobStep}
+          handlePreviousJobStep={handlePreviousJobStep}
+          handleInputChange={handleInputChange}
+          handleMustHaveSkillsChange={handleMustHaveSkillsChange}
+          handleNiceToHaveSkillsChange={handleNiceToHaveSkillsChange}
+          handleSalaryRangeChange={handleSalaryRangeChange}
+          handleJobSubmit={handleJobSubmit}
+          jobFormData={jobFormData}
+          selectedJob={selectedJob}
+        />
+      </>
+    );
+  }
 
-      <Modal
-        closeModal={closeModal}
-        isOpen={isOpen}
-        isEditMode={isEditMode}
-        step={step}
-        selectedCategory={selectedCategory}
-        selectedQuestion={selectedQuestion}
-        handlePreviousStep={handlePreviousStep}
-        handleNextStep={handleNextStep}
-        handleQuestionChange={handleQuestionChange}
-        handleCategoryChange={handleCategoryChange}
-        interviewAnswer={interviewAnswer}
-        handleInterviewAnswerChange={handleInterviewAnswerChange}
-        handleSubmit={handleSubmit}
-      />
-
-      <JobModal
-        isJobModalOpen={isJobModalOpen}
-        isJobModalEditMode={isJobModalEditMode}
-        jobStep={jobStep}
-        skills={skills}
-        closeJobModal={closeJobModal}
-        handleNextJobStep={handleNextJobStep}
-        handlePreviousJobStep={handlePreviousJobStep}
-        handleInputChange={handleInputChange}
-        handleMustHaveSkillsChange={handleMustHaveSkillsChange}
-        handleNiceToHaveSkillsChange={handleNiceToHaveSkillsChange}
-        handleSalaryRangeChange={handleSalaryRangeChange}
-        handleJobSubmit={handleJobSubmit}
-        jobFormData={jobFormData}
-        selectedJob={selectedJob}
-      />
-    </>
-  );
+  return <Link href="/api/auth/signin">Sign in</Link>;
 }
