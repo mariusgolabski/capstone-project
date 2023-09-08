@@ -7,6 +7,7 @@ export const StyledWrapper = styled.div`
 `;
 
 export const StyledProfileHeaderWrapper = styled.div`
+  padding-top: 3rem;
   margin-bottom: 1rem;
 `;
 
@@ -23,8 +24,6 @@ export const StyledCoverImage = styled(Image)`
   height: 100%;
   object-fit: cover;
   border-radius: 0.5rem;
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
 `;
 
 export const StyledUserProfileCard = styled.div`

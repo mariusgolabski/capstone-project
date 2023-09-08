@@ -9,7 +9,7 @@ export const Backdrop = styled.div`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(3px);
-  z-index: 5;
+  z-index: 15;
 `;
 
 export const StyledModal = styled.div`

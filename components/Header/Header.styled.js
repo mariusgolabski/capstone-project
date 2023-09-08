@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const StyledHeaderWrapper = styled.div`
+  z-index: 10;
   position: sticky;
   top: 0;
   display: flex;
