@@ -21,7 +21,8 @@ export default async function handler(request, response) {
         user_id: sessionUserId,
       })
         .populate("mustHaveSkills")
-        .populate("niceToHaveSkills");
+        .populate("niceToHaveSkills")
+        .populate("user_id", "userProfileImagePath");
 
       response.status(200).json(userJobs);
     } catch (error) {
