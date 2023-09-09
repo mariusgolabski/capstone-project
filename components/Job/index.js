@@ -18,7 +18,7 @@ export default function Job({ job, onEdit, onDelete }) {
     <StyledCard>
       <StyledContentWrapper>
         <StyledAvatarWrapper>
-          <Avatar />
+          <Avatar userImage={job.user_id.userProfileImagePath} />
           <StyledCompanyName>{job.companyName}</StyledCompanyName>
         </StyledAvatarWrapper>
         <h2>{job.jobTitle}</h2>
