@@ -9,8 +9,11 @@ const userSchema = new Schema({
   userCoverImagePath: { type: String, required: true },
   userProfileImagePath: { type: String, required: true },
   email: { type: String, required: true },
-  githubId: { type: String },
+  // githubId: { type: String },
+  githubId: { type: String, unique: true },
 });
+
+userSchema.index({ githubId: 1 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 
