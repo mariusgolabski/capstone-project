@@ -42,37 +42,45 @@ export const authOptions = {
   callbacks: {
     async signIn({ account, profile }) {
       if (account.provider === "github") {
-        const existingUser = await User.findOne({ githubId: profile.id });
+        console.log(`find github user with id: ${profile.id} `);
 
-        if (!existingUser) {
-          // If the user doesn't exist, create a new user record
-          const newUser = new User({
-            firstName: "test",
-            lastName: "test",
-            jobTitle: "test",
-            companyName: "test",
-            userCoverImagePath: "/bg3.jpg",
-            userProfileImagePath: profile.avatar_url,
-            email: profile.email,
-            githubId: profile.id,
-          });
+        try {
+          const existingUser = await User.findOne({ githubId: profile.id });
+          console.log(`Github - user exists with github id: ${profile.id} `);
 
-          savedUser = await newUser.save();
-          console.log("Saved user ID:", savedUser._id.toString());
+          if (!existingUser) {
+            // If the user doesn't exist, create a new user record
+            const newUser = new User({
+              firstName: "test",
+              lastName: "test",
+              jobTitle: "test",
+              companyName: "test",
+              userCoverImagePath: "/bg3.jpg",
+              userProfileImagePath: profile.avatar_url,
+              email: profile.email,
+              githubId: profile.id,
+            });
 
-          return {
-            id: savedUser._id.toString(),
-            user: savedUser,
-          };
-        } else {
-          savedUser = existingUser; // Use the existing user
-          return {
-            id: existingUser._id.toString(),
-            user: existingUser,
-          };
+            savedUser = await newUser.save();
+            console.log("saved user with id:", savedUser._id.toString());
+
+            return {
+              id: savedUser._id.toString(),
+              user: savedUser,
+            };
+          } else {
+            savedUser = existingUser; // Use the existing user
+            return {
+              id: existingUser._id.toString(),
+              user: existingUser,
+            };
+          }
+        } catch (error) {
+          console.error("Error while querying MongoDB:", error);
+          throw error;
         }
       }
-      return true; // Allow sign-in to proceed
+      return true;
     },
 
     async jwt({ token, user }) {
@@ -88,6 +96,15 @@ export const authOptions = {
       }
       return session;
     },
+
+    // async redirect({ url, baseUrl }) {
+    //   // If a user is signing out, redirect to /auth/signin
+    //   if (url === "/") {
+    //     return `${baseUrl}/auth/signin`;
+    //   }
+    //   // For other cases, use the default behavior
+    //   return url.startsWith("/") ? `${baseUrl}${url}` : baseUrl;
+    // },
   },
 
   pages: {

@@ -18,6 +18,8 @@ export default function Home() {
   const { data: session, status } = useSession();
   const userId = session?.user?.id;
 
+  console.log(session);
+
   const [tab, setTab] = useState("interviews");
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
