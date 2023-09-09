@@ -1,4 +1,4 @@
-import { signIn, getProviders } from "next-auth/react";
+import { signIn, getProviders, getSession } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Header from "../../components/Header";
@@ -90,7 +90,19 @@ export default function Signin({ providers }) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (session) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/home",
+      },
+      props: {},
+    };
+  }
+
   const providers = await getProviders();
   return {
     props: {
