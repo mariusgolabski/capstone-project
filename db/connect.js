@@ -19,6 +19,9 @@ if (!cached) {
   cached = global.mongoose = { conn: null, promise: null };
 }
 
+// Set maxTimeMS option globally for all queries
+// mongoose.set("maxTimeMS", 60000);
+
 async function dbConnect() {
   if (cached.conn) {
     return cached.conn;
