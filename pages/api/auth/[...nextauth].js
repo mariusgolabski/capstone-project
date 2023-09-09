@@ -49,6 +49,7 @@ export const authOptions = {
           console.log(`Github - user exists with github id: ${profile.id} `);
 
           if (!existingUser) {
+            console.log(`user doesn't exist, create a new user record`);
             // If the user doesn't exist, create a new user record
             const newUser = new User({
               firstName: "test",

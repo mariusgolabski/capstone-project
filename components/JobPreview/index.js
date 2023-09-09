@@ -1,19 +1,18 @@
-import { Avatar } from "../Avatar";
-
 import {
+  StyledAvatarWrapper,
   StyledCard,
   StyledCompanyName,
-  StyledFooter,
-  StyledButton,
-  StyledSkillsWrapper,
-  StyledSkill,
   StyledContentWrapper,
+  StyledFooter,
   StyledList,
   StyledListItem,
-  StyledAvatarWrapper,
-} from "./Job.Styled";
+  StyledSkill,
+  StyledSkillsWrapper,
+} from "@/components/JobPreview/JobPreview.styled";
+import { Avatar } from "@/components/Avatar";
 
-export default function Job({ job, onEdit, onDelete }) {
+export default function JobPreview({ job }) {
+  console.log(job);
   return (
     <StyledCard>
       <StyledContentWrapper>
@@ -24,8 +23,10 @@ export default function Job({ job, onEdit, onDelete }) {
         <h2>{job.jobTitle}</h2>
         <p>{`€ ${job.annualSalaryRange[0]} - ${job.annualSalaryRange[1]} K`}</p>
         <StyledSkillsWrapper>
-          {job.mustHaveSkills.map((skill) => (
-            <StyledSkill key={skill.value}>{skill.value}</StyledSkill>
+          {job.mustHaveSkills.map((mustHaveSkill) => (
+            <StyledSkill key={mustHaveSkill.value}>
+              {mustHaveSkill.value}
+            </StyledSkill>
           ))}
         </StyledSkillsWrapper>
       </StyledContentWrapper>
@@ -36,10 +37,6 @@ export default function Job({ job, onEdit, onDelete }) {
           <StyledListItem>{job.employmentType}</StyledListItem>
           <StyledListItem>{job.seniorityLevel}</StyledListItem>
         </StyledList>
-        <StyledButton onClick={() => onEdit(job)}>Edit</StyledButton>
-        <StyledButton onClick={() => onDelete(job, "jobs")}>
-          Delete
-        </StyledButton>
       </StyledFooter>
     </StyledCard>
   );
