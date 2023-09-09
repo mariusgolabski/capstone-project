@@ -1,4 +1,5 @@
 // import { user } from "../../db/user";
+import { useSession } from "next-auth/react";
 import useSWR from "swr";
 
 import {
@@ -14,8 +15,10 @@ import {
 } from "./ProfileHeader.styled";
 
 export default function ProfileHeader() {
+  const { data: session } = useSession();
+
   const { data, error, isLoading } = useSWR(
-    "/api/users/64f0c5a8b979a78d64d3b750"
+    session?.user?.id ? `/api/users/${session?.user?.id}` : null
   );
 
   if (error) {

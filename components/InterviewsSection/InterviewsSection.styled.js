@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { PlusCircleFill } from "@styled-icons/bootstrap";
 
 export const StyledSection = styled.section`
-  margin: 0 auto;
+  margin: 0 auto 4rem auto;
   padding: 0 1rem;
   max-width: 1030px;
   display: flex;
