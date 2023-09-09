@@ -33,10 +33,17 @@ export default function Header() {
                 <Avatar $imageUrl={user.userProfileImagePath} />
               )}
               <StyledButton
+                on
+                // href={`/api/auth/signout`}
+                // onClick={(event) => {
+                //   event.preventDefault();
+                //   signOut(/*{ callbackUrl: "http://localhost:3000/auth/signin" }*/);
+                // }}
+
                 href={`/api/auth/signout`}
                 onClick={(event) => {
                   event.preventDefault();
-                  signOut({ callbackUrl: "http://localhost:3000/auth/signin" });
+                  signOut({ callbackUrl: "/auth/signin" }); // Using relative URL
                 }}
               >
                 Sign out
