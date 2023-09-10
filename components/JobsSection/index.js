@@ -12,7 +12,7 @@ export default function JobsSection({
   onEdit,
   onDelete,
 }) {
-  const { data: jobs, error, isLoading } = useSWR(`/api/jobs/${userId}`);
+  const { data: jobs, error, isLoading } = useSWR(`/api/jobs/user`);
 
   if (error) {
     return <p>Failed to load job data.</p>;
@@ -37,7 +37,6 @@ export default function JobsSection({
           job={job}
           key={job._id}
           onEdit={onEdit}
-          // onDelete={onDelete}
           onDelete={() => onDelete(job, "jobs")}
         />
       ))}
