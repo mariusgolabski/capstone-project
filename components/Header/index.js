@@ -8,6 +8,7 @@ import {
   StyledHeaderWrapper,
   StyledButton,
 } from "./Header.styled";
+import Link from "next/link";
 
 export default function Header() {
   const router = useRouter();
@@ -25,12 +26,15 @@ export default function Header() {
       <StyledHeader>
         <h2>CurioHead</h2>
         <SignedInStatus>
+          <Link href="/jobs">Jobs</Link>
           {isLoading && <p>Loading...</p>}
           {error && <p>An error occurred: {error.message}</p>}
           {session?.user ? (
             <>
               {user?.userProfileImagePath && (
-                <Avatar $imageUrl={user.userProfileImagePath} />
+                <Link href="/home">
+                  <Avatar $imageUrl={user.userProfileImagePath} />
+                </Link>
               )}
               <StyledButton
                 on
