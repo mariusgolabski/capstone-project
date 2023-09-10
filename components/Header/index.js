@@ -27,6 +27,7 @@ export default function Header() {
         <h2>CurioHead</h2>
         <SignedInStatus>
           <Link href="/jobs">Jobs</Link>
+          <Link href="/leaders">Leaders</Link>
           {isLoading && <p>Loading...</p>}
           {error && <p>An error occurred: {error.message}</p>}
           {session?.user ? (
