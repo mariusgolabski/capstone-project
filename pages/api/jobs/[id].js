@@ -15,22 +15,7 @@ export default async function handler(request, response) {
 
   const sessionUserId = session.user.id;
 
-  if (request.method === "GET") {
-    try {
-      const userJobs = await Job.find({
-        user_id: sessionUserId,
-      })
-        .populate("mustHaveSkills")
-        .populate("niceToHaveSkills")
-        .populate("user_id", "userProfileImagePath");
-
-      response.status(200).json(userJobs);
-    } catch (error) {
-      response
-        .status(500)
-        .json({ error: "Internal server error while fetching jobs." });
-    }
-  } else if (request.method === "PUT") {
+  if (request.method === "PUT") {
     const { id: _id } = request.query;
     try {
       const job = await Job.findById(_id);

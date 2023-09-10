@@ -221,7 +221,7 @@ export default function Home() {
           if (deleteContentType === "interviews") {
             mutate(`/api/${deleteContentType}/${contentToDelete.userId}`);
           } else if (deleteContentType === "jobs") {
-            mutate(`/api/${deleteContentType}/${userId}`);
+            mutate(`/api/${deleteContentType}/user`);
           }
         } else {
           console.error(`Failed to delete ${deleteContentType}`);
@@ -336,11 +336,11 @@ export default function Home() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(jobFormData), // Send the updated job data
+          body: JSON.stringify(jobFormData),
         });
 
         if (response.ok) {
-          mutate(`/api/jobs/${userId}`);
+          mutate(`/api/jobs/user`);
           closeJobModal();
         } else {
           console.error("Failed to update job");
@@ -359,7 +359,7 @@ export default function Home() {
         });
 
         if (response.ok) {
-          mutate(`/api/jobs/${userId}`);
+          mutate(`/api/jobs/user`);
         } else {
           console.error("Failed to create job");
         }
