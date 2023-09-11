@@ -1,3 +1,4 @@
+import { useState } from "react";
 import useSWR from "swr";
 import { useRouter } from "next/router";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -6,11 +7,17 @@ import {
   StyledHeader,
   Avatar,
   StyledHeaderWrapper,
-  StyledButton,
+  NavItem,
+  StyledSignInButton,
+  StyledLink,
+  DropdownMenu,
+  DropdownItem,
+  StyledDropDownUserEmail,
 } from "./Header.styled";
 import Link from "next/link";
 
 export default function Header() {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
   const { data: session } = useSession();
   const {
@@ -19,46 +26,80 @@ export default function Header() {
     isLoading,
   } = useSWR(session?.user ? `/api/users/${session.user.id}` : null);
 
-  const signInButton = router.pathname === "/auth/signin";
-
   return (
     <StyledHeaderWrapper>
       <StyledHeader>
-        <h2>CurioHead</h2>
+        <Link href="/">
+          <h2>CurioHead</h2>
+        </Link>
         <SignedInStatus>
-          <Link href="/jobs">Jobs</Link>
-          <Link href="/leaders">Leaders</Link>
+          <NavItem>
+            <StyledLink href="/jobs" $isActive={router.pathname === "/jobs"}>
+              Jobs
+            </StyledLink>
+          </NavItem>
+          <NavItem>
+            <StyledLink
+              href="/leaders"
+              $isActive={router.pathname === "/leaders"}
+            >
+              Leaders
+            </StyledLink>
+          </NavItem>
+
           {isLoading && <p>Loading...</p>}
           {error && <p>An error occurred: {error.message}</p>}
           {session?.user ? (
             <>
               {user?.userProfileImagePath && (
-                <Link href="/home">
-                  <Avatar $imageUrl={user.userProfileImagePath} />
-                </Link>
+                <NavItem>
+                  <Avatar
+                    $imageUrl={user.userProfileImagePath}
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  >
+                    {isDropdownOpen && (
+                      <DropdownMenu>
+                        <StyledDropDownUserEmail>
+                          {user.email}
+                        </StyledDropDownUserEmail>
+                        <DropdownItem>
+                          <StyledLink
+                            href="/home"
+                            $isActive={router.pathname === "/home"}
+                          >
+                            Profile
+                          </StyledLink>
+                        </DropdownItem>
+                        <DropdownItem>
+                          <StyledSignInButton
+                            onClick={() => {
+                              setIsDropdownOpen(false);
+                              signOut({ callbackUrl: "/auth/signin" });
+                            }}
+                          >
+                            Sign out
+                          </StyledSignInButton>
+                        </DropdownItem>
+                      </DropdownMenu>
+                    )}
+                  </Avatar>
+                  {/* </StyledLink> */}
+                </NavItem>
               )}
-              <StyledButton
-                on
-                // href={`/api/auth/signout`}
-                // onClick={(event) => {
-                //   event.preventDefault();
-                //   signOut(/*{ callbackUrl: "http://localhost:3000/auth/signin" }*/);
-                // }}
-
-                href={`/api/auth/signout`}
-                onClick={(event) => {
-                  event.preventDefault();
-                  signOut({ callbackUrl: "/auth/signin" }); // Using relative URL
-                }}
-              >
-                Sign out
-              </StyledButton>
             </>
           ) : (
-            !isLoading &&
-            !signInButton && (
-              <StyledButton onClick={() => signIn()}>Sign in</StyledButton>
+            !isLoading && (
+              // !signInButton && (
+              <NavItem>
+                <StyledSignInButton
+                  onClick={() => signIn()}
+                  $isActive={router.pathname === "/auth/signin"}
+                >
+                  Sign in
+                </StyledSignInButton>
+              </NavItem>
             )
+            // )
           )}
         </SignedInStatus>
       </StyledHeader>
