@@ -18,8 +18,6 @@ export default function Home() {
   const { data: session, status } = useSession();
   const userId = session?.user?.id;
 
-  console.log(session);
-
   const [tab, setTab] = useState("interviews");
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -141,7 +139,6 @@ export default function Home() {
 
     if (isEditMode && selectedInterview) {
       try {
-        console.log(interviewData);
         const response = await fetch(
           `/api/interviews/${selectedInterview._id}`,
           {
@@ -205,7 +202,6 @@ export default function Home() {
     setContentToDelete(content);
     setDeleteContentType(contentType);
     setIsDeleteModalOpen(true);
-    console.log(contentToDelete);
   }
 
   async function handleConfirmDelete() {

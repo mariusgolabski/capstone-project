@@ -13,8 +13,6 @@ import {
 } from "../Job/Job.styled";
 
 export default function Job({ job, userProfileImagePath }) {
-  console.log(job);
-
   return (
     <StyledCard>
       <StyledContentWrapper>

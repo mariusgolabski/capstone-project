@@ -27,7 +27,6 @@ export default async function handler(request, response) {
       }
       // userId is in request.body
       const jobData = request.body;
-      console.log(jobData);
       const job = new Job(jobData);
       await job.save();
       return response.status(201).json({ message: "Job created successfully" });
