@@ -1,15 +1,13 @@
 import dbConnect from "../../../db/connect";
+import { authOptions } from "../../../pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
+
 import Job from "../../../db/models/Job";
 
 export default async function handler(request, response) {
   await dbConnect();
 
-  const session = await getServerSession(request, response);
-
-  if (!session) {
-    return response.status(401).json({ message: "Unauthorized" });
-  }
+  const session = await getServerSession(request, response, authOptions);
 
   if (request.method === "GET") {
     try {
@@ -24,6 +22,9 @@ export default async function handler(request, response) {
     }
   } else if (request.method === "POST") {
     try {
+      if (!session) {
+        return response.status(401).json({ message: "Unauthorized" });
+      }
       // userId is in request.body
       const jobData = request.body;
       console.log(jobData);

@@ -9,11 +9,7 @@ export default async function handler(request, response) {
   const jobData = request.body;
   const session = await getServerSession(request, response, authOptions);
 
-  if (!session) {
-    return response.status(401).json({ message: "Unauthorized" });
-  }
-
-  const sessionUserId = session.user.id;
+  const sessionUserId = session?.user?.id;
 
   const { id } = request.query;
 
