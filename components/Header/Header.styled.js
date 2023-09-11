@@ -1,6 +1,7 @@
-import styled from "styled-components";
+import Link from "next/link";
+import styled, { css } from "styled-components";
 
-export const StyledHeaderWrapper = styled.div`
+export const StyledHeaderWrapper = styled.header`
   z-index: 10;
   position: sticky;
   top: 0;
@@ -24,7 +25,7 @@ export const SignedInStatus = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
   width: 100%;
 `;
 
@@ -71,6 +72,76 @@ export const NavItems = styled.ul`
 `;
 
 export const NavItem = styled.li`
+  cursor: pointer;
   display: inline-block;
-  margin-right: 1rem;
+  /* margin-right: 1rem; */
+`;
+
+export const StyledLink = styled(Link)`
+  display: flex;
+  color: #666;
+  &:hover {
+    color: #000;
+  }
+
+  ${({ $isActive }) =>
+    $isActive &&
+    css`
+      color: #000;
+    `}
+`;
+
+export const StyledSignInButton = styled.button`
+  background-color: #000;
+  width: 100%;
+  display: flex;
+  padding: 0;
+  background-color: transparent;
+  font-size: inherit;
+  border: none;
+  cursor: pointer;
+  /* background-color: #fff; */
+  color: #666;
+
+  &:hover {
+    color: #000;
+  }
+
+  ${({ $isActive }) =>
+    $isActive &&
+    css`
+      color: #000;
+    `}
+`;
+
+export const DropdownMenu = styled.div`
+  min-width: 15rem;
+  position: absolute;
+  top: 4.375rem;
+  right: 1.5rem;
+  background-color: #fff;
+  border: 1px solid #eaeaea;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const DropdownItem = styled.div`
+  padding: 0.5rem 1rem;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #f2f2f2;
+  }
+`;
+
+export const StyledDropDownUserEmail = styled.span`
+  padding: 0.5rem 1rem;
+  cursor: default;
+  color: #333;
+  transition: background-color 0.3s ease;
 `;
