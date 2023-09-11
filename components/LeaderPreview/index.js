@@ -1,7 +1,6 @@
 import useSWR from "swr";
 import { Avatar } from "../Avatar";
 import {
-  Flex,
   StyledAvatarWrapper,
   StyledCard,
   StyledCompanyName,
@@ -20,7 +19,7 @@ export default function LeaderPreview({ leader }) {
   );
 
   return (
-    <StyledLink href={`/users/${leader._id}`}>
+    <StyledLink href={`/leaders/${leader._id}`}>
       <StyledCard>
         <StyledContentWrapper>
           <StyledAvatarWrapper>
