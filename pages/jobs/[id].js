@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import JobDetails from "@/components/JobDetails";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 
@@ -16,9 +17,7 @@ export default function JobDetailPage() {
   return (
     <>
       <Header />
-      <div>
-        <h1>{job.jobTitle}</h1>
-      </div>
+      <JobDetails job={job} />
     </>
   );
 }
