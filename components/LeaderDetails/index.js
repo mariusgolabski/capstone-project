@@ -30,10 +30,8 @@ export default function LeaderDetails({ leader }) {
     "Leadership",
   ];
   const interviews = leader.data.interviews;
-  console.log(leader.data.interviews);
 
   const jobs = leader.data.jobs;
-  console.log(jobs);
 
   const userProfileImagePath = leader.data.user.userProfileImagePath;
 
