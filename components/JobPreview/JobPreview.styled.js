@@ -1,3 +1,4 @@
+import { Search, XCircle } from "@styled-icons/bootstrap";
 import Link from "next/link";
 import styled from "styled-components";
 
@@ -105,4 +106,87 @@ export const StyledAvatarWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
+`;
+
+export const StyledJobHeroSection = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 1rem;
+  max-width: 1030px;
+  margin: 0 auto;
+  text-align: center;
+`;
+
+export const StyledHeading = styled.h1`
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  margin-top: 3.5rem;
+  @media (min-width: 768px) {
+    max-width: 800px;
+    font-size: 64px;
+    line-height: 74px;
+  }
+`;
+
+export const StyledHeroDescription = styled.p`
+  margin-bottom: 3rem;
+  font-size: 1.2rem;
+  color: #666;
+  font-weight: 300;
+`;
+
+export const StyledSearchWrapper = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
+export const StyledSearchInput = styled.input`
+  height: 2.5rem;
+  font-size: inherit;
+  width: 100%;
+  padding-left: 40px; /* make room for the icon */
+  border: 1px solid #e5e5e5;
+  border-radius: 0.375rem;
+  &:focus {
+    outline: none;
+    border: 1px solid #000;
+  }
+`;
+
+export const StyledSearch = styled(Search)`
+  color: #8f8f8f;
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  z-index: 10;
+`;
+
+export const StyledCleare = styled(XCircle)`
+  color: #8f8f8f;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  z-index: 10;
+  cursor: pointer;
+  &:hover {
+    color: #000;
+  }
+`;
+
+export const StyledResult = styled.p`
+  margin-top: 1rem;
+  align-self: flex-start;
+  color: #171717;
+`;
+
+export const StyledStrong = styled.strong`
+  font-weight: bold;
 `;
