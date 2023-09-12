@@ -121,3 +121,18 @@ export const StyledSkill = styled.span`
   background-color: #fafafa;
   color: #666;
 `;
+
+export const StyledAvatarWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 2rem;
+`;
+
+export const StyledUserName = styled.span`
+  display: block;
+  color: #666;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  border-radius: 1rem;
+`;

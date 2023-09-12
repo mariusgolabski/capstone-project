@@ -1,10 +1,21 @@
+import Link from "next/link";
 import styled from "styled-components";
+
+export const StyledLink = styled(Link)`
+  text-decoration: none;
+  a {
+    text-decoration: none;
+  }
+`;
 
 export const StyledCard = styled.article`
   border: 1px solid #eaeaea;
   border-radius: 0.5rem;
   box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.04);
   background-color: #ffffff;
+  &:hover {
+    border-color: #999;
+  }
 `;
 
 export const StyledCompanyName = styled.span`

@@ -1,6 +1,39 @@
 import Link from "next/link";
 import styled from "styled-components";
 
+
+
+export const StyledLeaderHeroSection = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 1rem;
+  max-width: 1030px;
+  margin: 0 auto;
+  text-align: center;
+`;
+
+export const StyledHeading = styled.h1`
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  margin-top: 3.5rem;
+  @media (min-width: 768px) {
+    max-width: 800px;
+    font-size: 64px;
+    line-height: 74px;
+  }
+`;
+
+export const StyledHeroDescription = styled.p`
+  margin-bottom: 3rem;
+  font-size: 1.2rem;
+  color: #666;
+  font-weight: 300;
+`;
+
+
+
 export const StyledLink = styled(Link)`
   text-decoration: none;
   a {
