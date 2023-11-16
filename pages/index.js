@@ -1,5 +1,15 @@
-import Header from "@/components/Header";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 export default function HomePage() {
-  return <Header />;
+  const router = useRouter();
+
+  useEffect(() => {
+    const redirectToSignIn = function () {
+      router.replace("/auth/signin/");
+    };
+
+    redirectToSignIn();
+  }, [router]);
+  return null;
 }
